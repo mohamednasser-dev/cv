@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Cv_certificat;
 use App\Cv_job_experience;
 use App\cv_personal_data;
 use Illuminate\Support\Facades\Validator;
@@ -39,7 +40,7 @@ class ProductController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['get_job_experience','save_job_experience','save_design','select_my_ads', 'all_comments', 'make_comment', 'make_report', 'ad_owner_info', 'current_ads', 'ended_ads', 'max_min_price', 'filter', 'offer_ads', 'republish_ad',
+        $this->middleware('auth:api', ['except' => ['delete_job_experience','delete_certifications','save_certifications','get_job_experience','get_certifications','save_job_experience','save_design','select_my_ads', 'all_comments', 'make_comment', 'make_report', 'ad_owner_info', 'current_ads', 'ended_ads', 'max_min_price', 'filter', 'offer_ads', 'republish_ad',
             'areas', 'cities', 'third_step_excute_pay', 'save_third_step_with_money', 'update_ad', 'select_ad_data', 'delete_my_ad',
             'save_third_step', 'save_second_step', 'save_first_step', 'getdetails', 'last_seen', 'getoffers', 'getproducts','map_ads', 'getsearch', 'getFeatureOffers']]);
     }
@@ -670,6 +671,9 @@ class ProductController extends Controller
         } else {
             $user = auth()->user();
             if ($user != null) {
+                if($request->cv_id == 0){
+                    unset($input['cv_id']);
+                }
                 $input['user_id'] = $user->id;
                 if ($request->image != null) {
                     $image = $request->image;
@@ -680,7 +684,12 @@ class ProductController extends Controller
                     $image_new_name = $image_id . '.' . $image_format;
                     $input['image'] = $image_new_name ;
                 }
-                cv_personal_data::create($input);
+                $exists_cv_personal = cv_personal_data::where('user_id',$user->id)->where('cv_id',null)->first();
+                if( $exists_cv_personal != null ){
+                    cv_personal_data::where('id',$exists_cv_personal->id )->update($input);
+                }else{
+                    cv_personal_data::create($input);
+                }
                 $response = APIHelpers::createApiResponse(false, 200, 'The design has been selected successfully', 'تم حفظ البيانات الشخصية بنجاح', null, $request->lang);
                 return response()->json($response, 200);
             } else {
@@ -708,6 +717,33 @@ class ProductController extends Controller
                 $input['user_id'] = $user->id;
                 Cv_job_experience::create($input);
                 $response = APIHelpers::createApiResponse(false, 200, 'Job experience saved successfully', 'تم حفظ الخبرة الوظيفية بنجاح', null, $request->lang);
+                return response()->json($response, 200);
+            } else {
+                $response = APIHelpers::createApiResponse(true, 406, '', 'يجب تسجيل الدخول اولا', null, $request->lang);
+                return response()->json($response, 406);
+            }
+        }
+    }
+
+    public function save_certifications(Request $request)
+    {
+        $input = $request->all();
+        $validator = Validator::make($input, [
+            'certificate_name' => 'required',
+            'degree_specialization' => 'required',
+            'collage_name' => 'required',
+            'start_date' => 'required',
+            'end_date' => 'required'
+        ]);
+        if ($validator->fails()) {
+            $response = APIHelpers::createApiResponse(true, 406, $validator->messages()->first(), $validator->messages()->first(), null, $request->lang);
+            return response()->json($response, 406);
+        } else {
+            $user = auth()->user();
+            if ($user != null) {
+                $input['user_id'] = $user->id;
+                Cv_certificat::create($input);
+                $response = APIHelpers::createApiResponse(false, 200, 'Certificate saved successfully', 'تم حفظ الشهادة بنجاح', null, $request->lang);
                 return response()->json($response, 200);
             } else {
                 $response = APIHelpers::createApiResponse(true, 406, '', 'يجب تسجيل الدخول اولا', null, $request->lang);
@@ -1540,10 +1576,36 @@ class ProductController extends Controller
         $response = APIHelpers::createApiResponse(false, 200, '', '',  $data, $request->lang);
         return response()->json($response, 200);
     }
+    public function get_personal_data(Request $request,$id)
+    {
+        $user = auth()->user();
+        if($id == 0){
+            $data = cv_personal_data::where('user_id',$user->id)->where('cv_id',null)->get();
+
+        }else{
+            $data = cv_personal_data::where('user_id',$user->id)->where('cv_id',$id)->get();
+        }
+        $response = APIHelpers::createApiResponse(false, 200, '', '',  $data, $request->lang);
+        return response()->json($response, 200);
+    }
+
+    public function get_certifications(Request $request)
+    {
+        $user = auth()->user();
+        $data = Cv_certificat::select('id','certificate_name','degree_specialization','collage_name','start_date','end_date')->where('user_id',$user->id)->where('cv_id',null)->get();
+        $response = APIHelpers::createApiResponse(false, 200, '', '',  $data, $request->lang);
+        return response()->json($response, 200);
+    }
     public function delete_job_experience(Request $request,$id)
     {
         $data = Cv_job_experience::where('id',$id)->delete();
         $response = APIHelpers::createApiResponse(false, 200, 'Job experience deleted successfully', 'تم حذف الخبرة الوظيفية بنجاح', null , $request->lang);
+        return response()->json($response, 200);
+    }
+    public function delete_certifications(Request $request,$id)
+    {
+        $data = Cv_certificat::where('id',$id)->delete();
+        $response = APIHelpers::createApiResponse(false, 200, 'Certificate deleted successfully', 'تم حذف الشهادة بنجاح', null , $request->lang);
         return response()->json($response, 200);
     }
     public function nationalities(Request $request)

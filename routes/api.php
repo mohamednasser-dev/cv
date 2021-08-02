@@ -165,10 +165,25 @@ use Illuminate\Http\Request;
     Route::get('/ad/sub_category_options/{category}/{sub_category}/{lang}/{v}' , 'CategoryController@getSubCategoryOptions');
     Route::get('/ad/sub_two_category_options/{category}/{sub_category}/{sub_two_category}/{lang}/{v}' , 'CategoryController@getSubTwoCategoryOptions');
 
-    //save cv apis ...
+    // save cv apis ...
+    // first step select design ...
     Route::post('/save_design/{lang}/{v}' , 'ProductController@save_first_step');
+
+    // second step personal data ...
     Route::post('/save_personal_data/{lang}/{v}' , 'ProductController@save_personal_data');
+    Route::get('/get_personal_data/{id}/{lang}/{v}' , 'ProductController@get_personal_data');
+    Route::get('/cities/{lang}/{v}' , 'ProductController@cities');
+    Route::get('/nationalities/{lang}/{v}' , 'ProductController@nationalities');
+
+    // third step job experience ...
     Route::post('/save_job_experience/{lang}/{v}' , 'ProductController@save_job_experience');
+    Route::get('/get_job_experience/{lang}/{v}' , 'ProductController@get_job_experience');
+    Route::get('/delete_job_experience/{id}/{lang}/{v}' , 'ProductController@delete_job_experience');
+
+    // fourth step is certifications
+    Route::post('/save_certifications/{lang}/{v}' , 'ProductController@save_certifications');
+    Route::get('/get_certifications/{lang}/{v}' , 'ProductController@get_certifications');
+    Route::get('/delete_certifications/{id}/{lang}/{v}' , 'ProductController@delete_certifications');
 
     //store ad with steps
     Route::post('/ad/save_new_ad/{lang}/{v}' , 'ProductController@save_first_step');
@@ -227,10 +242,8 @@ use Illuminate\Http\Request;
     Route::post('/visitor/create/{lang}/{v}' , 'VisitorController@create')->middleware('checkguest');
 
 
-    Route::get('/cities/{lang}/{v}' , 'ProductController@cities');
-    Route::get('/nationalities/{lang}/{v}' , 'ProductController@nationalities');
-    Route::get('/get_job_experience/{lang}/{v}' , 'ProductController@get_job_experience');
-    Route::get('/delete_job_experience/{id}/{lang}/{v}' , 'ProductController@delete_job_experience');
+
+
 
     Route::get('/ad/areas/{city_id}/{lang}/{v}' , 'ProductController@areas');
     Route::get('/ad/last_seen/{lang}/{v}' , 'ProductController@last_seen');

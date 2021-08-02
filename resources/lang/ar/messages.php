@@ -10,6 +10,9 @@ return [
 
 
 
+
+
+
     'reports' => "البلاغات",
     'expier_days' => "عدد أيام انتهاء الاعلان",
     'specialties' => "التخصصات",
@@ -25,7 +28,6 @@ return [
     'reject' => "رفض",
     'accepted_done' => "تم الموافقة بنجاح",
     'rejected_done' => "تم الرفض  بنجاح",
-
 
     'ecomercial_account_types' => "أنواع الحساب التجاري",
     'our_offers' => "عروضنا",
