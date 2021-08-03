@@ -113,7 +113,8 @@ use Illuminate\Http\Request;
     Route::get('/home/{lang}/{v}' , 'HomeController@gethome')->middleware('checkguest');
 
     // get home data
-    Route::get('/home_page/{lang}/{v}' , 'HomeController@getHomeAds')->middleware('checkguest');
+    Route::get('/home_page/{lang}/{v}' , 'HomeController@home_page');
+    Route::get('/delete_cv/{id}/{lang}/{v}' , 'HomeController@delete_cv');
     Route::get('/home/city_filter/{area_id}/{lang}/{v}' , 'HomeController@city_filter')->middleware('checkguest');
 
     // send contact us message
@@ -166,8 +167,11 @@ use Illuminate\Http\Request;
     Route::get('/ad/sub_two_category_options/{category}/{sub_category}/{sub_two_category}/{lang}/{v}' , 'CategoryController@getSubTwoCategoryOptions');
 
     // save cv apis ...
+    Route::get('/cv_preview/{id}/{lang}/{v}' , 'ProductController@cv_preview');
+    Route::get('/save_previewed_cv/{lang}/{v}' , 'ProductController@save_previewed_cv');
+
     // first step select design ...
-    Route::post('/save_design/{lang}/{v}' , 'ProductController@save_first_step');
+    Route::post('/save_design/{lang}/{v}' , 'ProductController@save_design');
 
     // second step personal data ...
     Route::post('/save_personal_data/{lang}/{v}' , 'ProductController@save_personal_data');
@@ -177,13 +181,28 @@ use Illuminate\Http\Request;
 
     // third step job experience ...
     Route::post('/save_job_experience/{lang}/{v}' , 'ProductController@save_job_experience');
-    Route::get('/get_job_experience/{lang}/{v}' , 'ProductController@get_job_experience');
+    Route::get('/get_job_experience/{id}/{lang}/{v}' , 'ProductController@get_job_experience');
     Route::get('/delete_job_experience/{id}/{lang}/{v}' , 'ProductController@delete_job_experience');
+
+    // fifth step job experience ...
+    Route::post('/save_personal_experience/{lang}/{v}' , 'ProductController@save_personal_experience');
+    Route::get('/get_personal_experience/{id}/{lang}/{v}' , 'ProductController@get_personal_experience');
+    Route::get('/delete_personal_experience/{id}/{lang}/{v}' , 'ProductController@delete_personal_experience');
 
     // fourth step is certifications
     Route::post('/save_certifications/{lang}/{v}' , 'ProductController@save_certifications');
-    Route::get('/get_certifications/{lang}/{v}' , 'ProductController@get_certifications');
+    Route::get('/get_certifications/{id}/{lang}/{v}' , 'ProductController@get_certifications');
     Route::get('/delete_certifications/{id}/{lang}/{v}' , 'ProductController@delete_certifications');
+
+    // seventh step is certifications
+    Route::post('/save_course/{lang}/{v}' , 'ProductController@save_course');
+    Route::get('/get_course/{id}/{lang}/{v}' , 'ProductController@get_course');
+    Route::get('/delete_course/{id}/{lang}/{v}' , 'ProductController@delete_course');
+
+    // sixth step is certifications
+    Route::post('/save_hobbies/{lang}/{v}' , 'ProductController@save_hobbies');
+    Route::get('/get_hobbies/{id}/{lang}/{v}' , 'ProductController@get_hobbies');
+    Route::get('/delete_hobbies/{id}/{lang}/{v}' , 'ProductController@delete_hobbies');
 
     //store ad with steps
     Route::post('/ad/save_new_ad/{lang}/{v}' , 'ProductController@save_first_step');

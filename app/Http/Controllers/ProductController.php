@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Cv_certificat;
+use App\Cv_course;
+use App\Cv_design;
 use App\Cv_job_experience;
 use App\cv_personal_data;
+use App\Cv_personal_experience;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Session;
 use JD\Cloudder\Facades\Cloudder;
@@ -42,7 +45,7 @@ class ProductController extends Controller
     {
         $this->middleware('auth:api', ['except' => ['delete_job_experience','delete_certifications','save_certifications','get_job_experience','get_certifications','save_job_experience','save_design','select_my_ads', 'all_comments', 'make_comment', 'make_report', 'ad_owner_info', 'current_ads', 'ended_ads', 'max_min_price', 'filter', 'offer_ads', 'republish_ad',
             'areas', 'cities', 'third_step_excute_pay', 'save_third_step_with_money', 'update_ad', 'select_ad_data', 'delete_my_ad',
-            'save_third_step', 'save_second_step', 'save_first_step', 'getdetails', 'last_seen', 'getoffers', 'getproducts','map_ads', 'getsearch', 'getFeatureOffers']]);
+            'save_third_step', 'save_second_step', 'getdetails', 'last_seen', 'getoffers', 'getproducts','map_ads', 'getsearch', 'getFeatureOffers']]);
     }
 
 
@@ -623,11 +626,12 @@ class ProductController extends Controller
     }
     //nasser code
     //to create ad you need 3 steps
-    public function save_first_step(Request $request)
+    public function save_design(Request $request)
     {
         $input = $request->all();
         $validator = Validator::make($input, [
-            'design_number' => 'required'
+            'design_number' => 'required',
+            'cv_id' => 'required'
         ]);
         if ($validator->fails()) {
             $response = APIHelpers::createApiResponse(true, 406, $validator->messages()->first(), $validator->messages()->first(), null, $request->lang);
@@ -635,10 +639,26 @@ class ProductController extends Controller
         } else {
             $user = auth()->user();
             if ($user != null) {
-                $product = new cv();
-                $product->design_number = $request->design_number;
-                $product->user_id = $user->id;
-                $product->save();
+                if($request->cv_id == 0){
+                    $exists_cv = Cv_design::where('user_id',$user->id)->where('cv_id',null)->first();
+                    if($exists_cv != null){
+                        unset($input['cv_id']);
+                        Cv_design::where('user_id',$user->id)->where('cv_id',null)->update($input);
+                    }else{
+                        $input['user_id'] = $user->id ;
+                        unset($input['cv_id']);
+                        Cv_design::create($input);
+                    }
+                }else{
+                    $exists_cv = Cv_design::where('user_id',$user->id)->where('cv_id',$request->cv_id)->first();
+                    if($exists_cv != null){
+                        unset($input['cv_id']);
+                        Cv_design::where('user_id',$user->id)->where('cv_id',$request->cv_id)->update($input);
+                    }else{
+                        $input['user_id'] = $user->id ;
+                        Cv_design::create($input);
+                    }
+                }
                 $response = APIHelpers::createApiResponse(false, 200, 'The design has been selected successfully', 'تم اختيار التصميم بنجاح', null, $request->lang);
                 return response()->json($response, 200);
             } else {
@@ -671,10 +691,8 @@ class ProductController extends Controller
         } else {
             $user = auth()->user();
             if ($user != null) {
-                if($request->cv_id == 0){
-                    unset($input['cv_id']);
-                }
-                $input['user_id'] = $user->id;
+
+
                 if ($request->image != null) {
                     $image = $request->image;
                     Cloudder::upload("data:image/jpeg;base64," . $image, null);
@@ -684,14 +702,20 @@ class ProductController extends Controller
                     $image_new_name = $image_id . '.' . $image_format;
                     $input['image'] = $image_new_name ;
                 }
-                $exists_cv_personal = cv_personal_data::where('user_id',$user->id)->where('cv_id',null)->first();
-                if( $exists_cv_personal != null ){
-                    cv_personal_data::where('id',$exists_cv_personal->id )->update($input);
-                }else{
+
+                if($request->cv_id == 0){
+                    unset($input['cv_id']);
+                    $input['user_id'] = $user->id;
                     cv_personal_data::create($input);
+                    $response = APIHelpers::createApiResponse(false, 200, 'Your personal data has been saved successfully', 'تم حفظ البيانات الشخصية بنجاح', null, $request->lang);
+                    return response()->json($response, 200);
+                }else{
+                    unset($input['cv_id']);
+                    cv_personal_data::where('cv_id',$request->cv_id )->update($input);
+                    $response = APIHelpers::createApiResponse(false, 200, 'Your personal data has been updated successfully', 'تم تعديل البيانات الشخصية بنجاح', null, $request->lang);
+                    return response()->json($response, 200);
                 }
-                $response = APIHelpers::createApiResponse(false, 200, 'The design has been selected successfully', 'تم حفظ البيانات الشخصية بنجاح', null, $request->lang);
-                return response()->json($response, 200);
+
             } else {
                 $response = APIHelpers::createApiResponse(true, 406, '', 'يجب تسجيل الدخول اولا', null, $request->lang);
                 return response()->json($response, 406);
@@ -706,7 +730,8 @@ class ProductController extends Controller
             'job_name' => 'required',
             'job_distination' => 'required',
             'start_date' => 'required',
-            'end_date' => 'required'
+            'end_date' => 'required',
+            'cv_id' => 'required'
         ]);
         if ($validator->fails()) {
             $response = APIHelpers::createApiResponse(true, 406, $validator->messages()->first(), $validator->messages()->first(), null, $request->lang);
@@ -714,9 +739,42 @@ class ProductController extends Controller
         } else {
             $user = auth()->user();
             if ($user != null) {
+                if($request->cv_id == 0){
+                    unset($input['cv_id']);
+                }
                 $input['user_id'] = $user->id;
                 Cv_job_experience::create($input);
                 $response = APIHelpers::createApiResponse(false, 200, 'Job experience saved successfully', 'تم حفظ الخبرة الوظيفية بنجاح', null, $request->lang);
+                return response()->json($response, 200);
+            } else {
+                $response = APIHelpers::createApiResponse(true, 406, '', 'يجب تسجيل الدخول اولا', null, $request->lang);
+                return response()->json($response, 406);
+            }
+        }
+    }
+
+    public function save_personal_experience(Request $request)
+    {
+        $input = $request->all();
+        $validator = Validator::make($input, [
+            'job_name' => 'required',
+            'job_distination' => 'required',
+            'start_date' => 'required',
+            'end_date' => 'required',
+            'cv_id' => 'required'
+        ]);
+        if ($validator->fails()) {
+            $response = APIHelpers::createApiResponse(true, 406, $validator->messages()->first(), $validator->messages()->first(), null, $request->lang);
+            return response()->json($response, 406);
+        } else {
+            $user = auth()->user();
+            if ($user != null) {
+                if($request->cv_id == 0){
+                    unset($input['cv_id']);
+                }
+                $input['user_id'] = $user->id;
+                Cv_personal_experience::create($input);
+                $response = APIHelpers::createApiResponse(false, 200, 'Personal experience saved successfully', 'تم حفظ الخبرة الشخصية بنجاح', null, $request->lang);
                 return response()->json($response, 200);
             } else {
                 $response = APIHelpers::createApiResponse(true, 406, '', 'يجب تسجيل الدخول اولا', null, $request->lang);
@@ -733,7 +791,8 @@ class ProductController extends Controller
             'degree_specialization' => 'required',
             'collage_name' => 'required',
             'start_date' => 'required',
-            'end_date' => 'required'
+            'end_date' => 'required',
+            'cv_id' => 'required'
         ]);
         if ($validator->fails()) {
             $response = APIHelpers::createApiResponse(true, 406, $validator->messages()->first(), $validator->messages()->first(), null, $request->lang);
@@ -741,6 +800,9 @@ class ProductController extends Controller
         } else {
             $user = auth()->user();
             if ($user != null) {
+                if($request->cv_id == 0){
+                    unset($input['cv_id']);
+                }
                 $input['user_id'] = $user->id;
                 Cv_certificat::create($input);
                 $response = APIHelpers::createApiResponse(false, 200, 'Certificate saved successfully', 'تم حفظ الشهادة بنجاح', null, $request->lang);
@@ -752,6 +814,93 @@ class ProductController extends Controller
         }
     }
 
+    public function cv_preview(Request $request,$id)
+    {
+        $user = auth()->user();
+        Session::put('api_lang', $request->lang);
+        if($id == 0){
+            $data['design'] = Cv_design::select('id','design_number')->where('user_id',$user->id)->where('cv_id',null)->get();
+            $data['personal_data'] = cv_personal_data::with('Nationality')->with('City')->where('user_id',$user->id)->where('cv_id',null)->get();
+            $data['job_experience'] = Cv_job_experience::select('id','job_name','job_distination','start_date','end_date')->where('user_id',$user->id)->where('cv_id',null)->get();
+            $data['certificat'] = Cv_certificat::select('id','certificate_name','degree_specialization','collage_name','start_date','end_date')->where('user_id',$user->id)->where('cv_id',null)->get();
+            $data['personal_experience'] = Cv_personal_experience::select('id','job_name','job_distination','start_date','end_date')->where('user_id',$user->id)->where('cv_id',null)->get();
+            $data['course'] = Cv_course::select('id','course_name','degree','collage_name','start_date','end_date')->where('user_id',$user->id)->where('cv_id',null)->get();
+        }else{
+            $data['design'] = Cv_design::select('id','design_number')->where('user_id',$user->id)->where('cv_id',$id)->get();
+            $data['personal_data'] = cv_personal_data::with('Nationality')->with('City')->where('user_id',$user->id)->where('cv_id',$id)->get();
+            $data['job_experience'] = Cv_job_experience::select('id','job_name','job_distination','start_date','end_date')->where('user_id',$user->id)->where('cv_id',$id)->get();
+            $data['certificat'] = Cv_certificat::select('id','certificate_name','degree_specialization','collage_name','start_date','end_date')->where('user_id',$user->id)->where('cv_id',$id)->get();
+            $data['personal_experience'] = Cv_personal_experience::select('id','job_name','job_distination','start_date','end_date')->where('user_id',$user->id)->where('cv_id',$id)->get();
+            $data['course'] = Cv_course::select('id','course_name','degree','collage_name','start_date','end_date')->where('user_id',$user->id)->where('cv_id',$id)->get();
+        }
+        $response = APIHelpers::createApiResponse(false, 200, '', '',  $data, $request->lang);
+        return response()->json($response, 200);
+    }
+
+    public function save_previewed_cv(Request $request)
+    {
+
+            $user = auth()->user();
+            if ($user != null) {
+                $exuists_design = Cv_design::where('user_id',$user->id)->where('cv_id',null)->first();
+
+                if($exuists_design != null){
+                    $data['user_id'] = $user->id;
+                    $data['design_number'] = $exuists_design->design_number;
+                    $cv = cv::create($data);
+
+                    $input['cv_id'] = $cv->id;
+                    Cv_design::where('user_id',$user->id)->where('cv_id',null)->update($input);
+                    cv_personal_data::where('user_id',$user->id)->where('cv_id',null)->update($input);
+                    Cv_job_experience::where('user_id',$user->id)->where('cv_id',null)->update($input);
+                    Cv_certificat::where('user_id',$user->id)->where('cv_id',null)->update($input);
+                    Cv_personal_experience::where('user_id',$user->id)->where('cv_id',null)->update($input);
+                    Cv_course::where('user_id',$user->id)->where('cv_id',null)->update($input);
+
+                    $response = APIHelpers::createApiResponse(false, 200, 'cv saved successfully', 'تم حفظ السيرة الذاتية بنجاح', null, $request->lang);
+                    return response()->json($response, 200);
+                }else{
+                    $response = APIHelpers::createApiResponse(true, 406, 'you should choose design first ...', 'يجب أختيار تصميم أولا  ...', null, $request->lang);
+                    return response()->json($response, 406);
+                }
+
+            } else {
+                $response = APIHelpers::createApiResponse(true, 406, '', 'يجب تسجيل الدخول اولا', null, $request->lang);
+                return response()->json($response, 406);
+            }
+
+    }
+
+    public function save_course(Request $request)
+    {
+        $input = $request->all();
+        $validator = Validator::make($input, [
+            'course_name' => 'required',
+            'degree' => 'required',
+            'collage_name' => 'required',
+            'start_date' => 'required',
+            'end_date' => 'required',
+            'cv_id' => 'required'
+        ]);
+        if ($validator->fails()) {
+            $response = APIHelpers::createApiResponse(true, 406, $validator->messages()->first(), $validator->messages()->first(), null, $request->lang);
+            return response()->json($response, 406);
+        } else {
+            $user = auth()->user();
+            if ($user != null) {
+                if($request->cv_id == 0){
+                    unset($input['cv_id']);
+                }
+                $input['user_id'] = $user->id;
+                Cv_course::create($input);
+                $response = APIHelpers::createApiResponse(false, 200, 'Course saved successfully', 'تم حفظ الكورس بنجاح', null, $request->lang);
+                return response()->json($response, 200);
+            } else {
+                $response = APIHelpers::createApiResponse(true, 406, '', 'يجب تسجيل الدخول اولا', null, $request->lang);
+                return response()->json($response, 406);
+            }
+        }
+    }
 
     public function save_second_step(Request $request)
     {
@@ -1569,10 +1718,26 @@ class ProductController extends Controller
         return response()->json($response, 200);
     }
 
-    public function get_job_experience(Request $request)
+    public function get_job_experience(Request $request,$id)
     {
         $user = auth()->user();
-        $data = Cv_job_experience::select('id','job_name','job_distination','start_date','end_date')->where('user_id',$user->id)->where('cv_id',null)->get();
+        if($id == 0){
+            $data = Cv_job_experience::select('id','job_name','job_distination','start_date','end_date')->where('user_id',$user->id)->where('cv_id',null)->get();
+        }else{
+            $data = Cv_job_experience::select('id','job_name','job_distination','start_date','end_date')->where('user_id',$user->id)->where('cv_id',$id)->get();
+        }
+        $response = APIHelpers::createApiResponse(false, 200, '', '',  $data, $request->lang);
+        return response()->json($response, 200);
+    }
+
+    public function get_personal_experience(Request $request,$id)
+    {
+        $user = auth()->user();
+        if($id == 0){
+            $data = Cv_personal_experience::select('id','job_name','job_distination','start_date','end_date')->where('user_id',$user->id)->where('cv_id',null)->get();
+        }else{
+            $data = Cv_personal_experience::select('id','job_name','job_distination','start_date','end_date')->where('user_id',$user->id)->where('cv_id',$id)->get();
+        }
         $response = APIHelpers::createApiResponse(false, 200, '', '',  $data, $request->lang);
         return response()->json($response, 200);
     }
@@ -1581,7 +1746,6 @@ class ProductController extends Controller
         $user = auth()->user();
         if($id == 0){
             $data = cv_personal_data::where('user_id',$user->id)->where('cv_id',null)->get();
-
         }else{
             $data = cv_personal_data::where('user_id',$user->id)->where('cv_id',$id)->get();
         }
@@ -1589,23 +1753,52 @@ class ProductController extends Controller
         return response()->json($response, 200);
     }
 
-    public function get_certifications(Request $request)
+    public function get_certifications(Request $request,$id)
     {
         $user = auth()->user();
-        $data = Cv_certificat::select('id','certificate_name','degree_specialization','collage_name','start_date','end_date')->where('user_id',$user->id)->where('cv_id',null)->get();
+        if($id == 0){
+            $data = Cv_certificat::select('id','certificate_name','degree_specialization','collage_name','start_date','end_date')->where('user_id',$user->id)->where('cv_id',null)->get();
+        }else{
+            $data = Cv_certificat::select('id','certificate_name','degree_specialization','collage_name','start_date','end_date')->where('user_id',$user->id)->where('cv_id',$id)->get();
+        }
         $response = APIHelpers::createApiResponse(false, 200, '', '',  $data, $request->lang);
         return response()->json($response, 200);
     }
+    public function get_course(Request $request,$id)
+    {
+        $user = auth()->user();
+        if($id == 0){
+            $data = Cv_course::select('id','course_name','degree','collage_name','start_date','end_date')->where('user_id',$user->id)->where('cv_id',null)->get();
+        }else{
+            $data = Cv_course::select('id','course_name','degree','collage_name','start_date','end_date')->where('user_id',$user->id)->where('cv_id',$id)->get();
+        }
+        $response = APIHelpers::createApiResponse(false, 200, '', '',  $data, $request->lang);
+        return response()->json($response, 200);
+    }
+
+
     public function delete_job_experience(Request $request,$id)
     {
         $data = Cv_job_experience::where('id',$id)->delete();
         $response = APIHelpers::createApiResponse(false, 200, 'Job experience deleted successfully', 'تم حذف الخبرة الوظيفية بنجاح', null , $request->lang);
         return response()->json($response, 200);
     }
+    public function delete_personal_experience(Request $request,$id)
+    {
+        $data = Cv_personal_experience::where('id',$id)->delete();
+        $response = APIHelpers::createApiResponse(false, 200, 'Job experience deleted successfully', 'تم حذف الخبرة الشخصية بنجاح', null , $request->lang);
+        return response()->json($response, 200);
+    }
     public function delete_certifications(Request $request,$id)
     {
         $data = Cv_certificat::where('id',$id)->delete();
         $response = APIHelpers::createApiResponse(false, 200, 'Certificate deleted successfully', 'تم حذف الشهادة بنجاح', null , $request->lang);
+        return response()->json($response, 200);
+    }
+    public function delete_course(Request $request,$id)
+    {
+        $data = Cv_course::where('id',$id)->delete();
+        $response = APIHelpers::createApiResponse(false, 200, 'Certificate deleted successfully', 'تم حذف الكورس بنجاح', null , $request->lang);
         return response()->json($response, 200);
     }
     public function nationalities(Request $request)

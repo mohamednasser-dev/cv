@@ -56,81 +56,6 @@
                     $total_count = $reports_count + $comments_count ;
                 @endphp
 
-                @if(in_array(13 , Auth::user()->custom['admin_permission']))
-                    <li class="menu products">
-                        <a href="#products" data-toggle="collapse" aria-expanded="false"
-                           class="dropdown-toggle first-link">
-                            <div class="">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                     stroke-linejoin="round" class="feather feather-lock">
-                                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-                                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-                                </svg>
-                                <span>{{ __('messages.ads') }}
-                                    @if( $total_count> 0 )
-                                        <span class="unreadcount">
-                                        <span class="insidecount">
-                                            {{$total_count}}
-                                        </span>
-                                    </span>
-                                    @endif
-                                </span>
-                            </div>
-                            <div>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                     stroke-linejoin="round" class="feather feather-chevron-right">
-                                    <polyline points="9 18 15 12 9 6"></polyline>
-                                </svg>
-                            </div>
-                        </a>
-                        <ul class="collapse submenu list-unstyled" id="products" data-parent="#accordionExample">
-                            <li class="show">
-                                <a href="/admin-panel/products/show">{{ __('messages.show') }}</a>
-                            </li>
-                            <li class="reports">
-                                <a href="/admin-panel/products/comments">{{ __('messages.reports') }}
-                                    @if( $reports_count> 0 )
-                                        <span class="unreadcount">
-                                        <span class="insidecount">
-                                            {{$reports_count}}
-                                        </span>
-                                    </span>
-                                    @endif
-                                </a>
-                            </li>
-                            <li class="comments">
-                                <a href="/admin-panel/products/comments">{{ __('messages.comments') }}
-                                    @if( $comments_count> 0 )
-                                        <span class="unreadcount">
-                                        <span class="insidecount">
-                                            {{$comments_count}}
-                                        </span>
-                                    </span>
-                                    @endif
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                @endif
-
-                @if(in_array(4 , Auth::user()->custom['admin_permission']))
-                    <li class="menu categories">
-                        <a href="/admin-panel/categories/show" class="dropdown-toggle first-link">
-                            <div class="">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                     stroke-linejoin="round" class="feather feather-layers">
-                                    <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
-                                    <polyline points="2 17 12 22 22 17"></polyline>
-                                    <polyline points="2 12 12 17 22 12"></polyline>
-                                </svg>
-                                <span>{{ __('messages.categories') }}</span>
-                            </div>
-                        </a>
-                    </li>
-                @endif
                 @if(in_array(19 , Auth::user()->custom['admin_permission']))
                     <li class="menu cities">
                         <a href="{{route('cities.index')}}" class="dropdown-toggle first-link">
@@ -200,16 +125,6 @@
                                       </span>
                                     @endif
                                  </span>
-                            </div>
-                        </a>
-                    </li>
-                @endif
-                @if(in_array(18 , Auth::user()->custom['admin_permission']))
-                    <li class="menu account_types">
-                        <a href="/admin-panel/account_types" class="dropdown-toggle first-link">
-                            <div class="">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg>
-                                <span>{{ __('messages.ecomercial_account_types') }}</span>
                             </div>
                         </a>
                     </li>

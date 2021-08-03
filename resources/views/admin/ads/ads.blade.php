@@ -28,12 +28,6 @@
                     {{ __('messages.on_the_top') }}
                  </a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" id="icon-contact-tab" data-toggle="tab" href="#icon-contact" role="tab" aria-controls="icon-contact" aria-selected="false">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down"><line x1="12" y1="5" x2="12" y2="19"></line><polyline points="19 12 12 19 5 12"></polyline></svg>
-                    {{ __('messages.on_the_bottom') }}
-                 </a>
-            </li>
         </ul>
         <div class="tab-content" id="iconTabContent-1">
             <div class="tab-pane fade show active" id="icon-home" role="tabpanel" aria-labelledby="icon-home-tab">

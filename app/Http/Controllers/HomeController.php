@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\cv;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Http\Request;
 use App\Helpers\APIHelpers;
@@ -22,7 +23,7 @@ class HomeController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['home_page','city_filter','balance_packages', 'gethome', 'getHomeAds', 'check_ad', 'main_ad']]);
+        $this->middleware('auth:api', ['except' => ['city_filter','balance_packages', 'gethome', 'home_page', 'delete_cv','check_ad', 'main_ad']]);
         //        --------------------------------------------- begin scheduled functions --------------------------------------------------------
             $expired = Product::where('status', 1)->whereDate('expiry_date', '<', Carbon::now())->get();
             foreach ($expired as $row) {
@@ -60,107 +61,22 @@ class HomeController extends Controller
         return response()->json($response, 200);
     }
 
-    public function getHomeAds(Request $request){
-        $ads = Ad::select('id', 'image', 'type', 'content')->where('place', 1)->get();
+    public function home_page(Request $request){
+        $data['ads'] = Ad::select('id', 'image', 'type', 'content')->where('place', 1)->inRandomOrder()->take(1)->get();
         $lang = $request->lang;
         Session::put('api_lang', $lang);
         $user = auth()->user();
-        $cat_ids =[];
-        $categories = Category::where(function ($q) {
-            $q->has('SubCategories', '>', 0)->orWhere(function ($qq) {
-                $qq->has('Products', '>', 0);
-            });
-        })->where('deleted', 0)->select('id', 'title_' . $lang . ' as title', 'image')->orderBy('sort', 'asc')->get();
 
-        for ($i = 0; $i < count($categories); $i++) {
-            $cat_ids[$i] = $categories[$i]['id'];
-            $categories[$i]['products_count'] = Product::where('category_id', $categories[$i]['id'])->where('status', 1)->where('publish', 'Y')->where('deleted', 0)->count();
-            //text next level
-            $subTwoCats = SubCategory::where('category_id', $categories[$i]['id'])->where('deleted', 0)->select('id')->first();
-            $categories[$i]['next_level'] = false;
-            if (isset($subTwoCats['id'])) {
-                $categories[$i]['next_level'] = true;
-            }
-            if ($categories[$i]['next_level'] == true) {
-                // check after this level layers
-                $data_ids = SubCategory::where('deleted', '0')->where('category_id', $categories[$i]['id'])->select('id')->get()->toArray();
-                $subFiveCats = SubTwoCategory::whereIn('sub_category_id', $data_ids)->where('deleted', 0)->select('id', 'deleted')->get();
-                if (count($subFiveCats) == 0) {
-                    $have_next_level = false;
-                } else {
-                    $have_next_level = true;
-                }
-                if ($have_next_level == false) {
-                    $categories[$i]['next_level'] = false;
-                } else {
-                    $categories[$i]['next_level'] = true;
-                }
-                //End check
-            }
-        }
-
-        $data['categories'] = $categories;
-        $products = Product::where('status', 1)
-            ->with('Publisher')
-            ->where('publish', 'Y')
-            ->where('deleted', 0)
-            ->whereIn('category_id', $cat_ids)
-            ->select('id', 'title', 'main_image as image', 'created_at', 'user_id','city_id','area_id')
-            ->orderBy('created_at', 'desc')
-            ->simplePaginate(12)->makeHidden(['City','Area']);
-        for ($i = 0; $i < count($products); $i++) {
-                if($lang == 'ar'){
-                    $products[$i]['address'] = $products[$i]['City']->title_ar .' , '.$products[$i]['Area']->title_ar;
-                }else{
-                    $products[$i]['address'] = $products[$i]['City']->title_en .' , '.$products[$i]['Area']->title_en;
-                }
-            if ($user) {
-                $favorite = Favorite::where('user_id', $user->id)->where('product_id', $products[$i]['id'])->first();
-                if ($favorite) {
-                    $products[$i]['favorite'] = true;
-                } else {
-                    $products[$i]['favorite'] = false;
-                }
-
-                $conversation = Participant::where('ad_product_id', $products[$i]['id'])->where('user_id', $user->id)->first();
-                if ($conversation == null) {
-                    $products[$i]['conversation_id'] = 0;
-                } else {
-                    $products[$i]['conversation_id'] = $conversation->conversation_id;
-                }
-            } else {
-                $products[$i]['favorite'] = false;
-                $products[$i]['conversation_id'] = 0;
-            }
-            $products[$i]['time'] = APIHelpers::get_month_day($products[$i]['created_at'], $lang);
-        }
-
-        $new_ad = [];
-        for ($i = 0; $i < count($products); $i++) {
-
-            if ((($i+1) % 2) == 0) {
-                $ad = Ad::select('id', 'image', 'type', 'content')->where('place', 1)->inRandomOrder()->first();
-                if($ad){
-                    $ad->id = 0;
-                    $ad->title = $ad->content;
-                    $ad->user_id = 0;
-                    $ad->created_at = Carbon::now();
-                    $ad->city_id = 0;
-                    $ad->area_id = 0;
-                    $ad->address = $ad->type;
-                    $ad->favorite =false;
-                    $ad->conversation_id =0;
-                    $ad->time ="";
-                    $ad->publisher = (object)[];
-                    array_push($new_ad , $products[$i]);
-                    array_push($new_ad , $ad);
-                }
-            }else{
-                array_push($new_ad , $products[$i]);
-            }
-        }
-        $data['products'] = $new_ad;
+        $data['cv'] = cv::select('id','design_number','created_at')->with('Personal_experience')->with('Personal_data')
+                ->where('deleted','0')->where('user_id',$user->id)->orderBy('created_at', 'desc')
+                ->simplePaginate(12);
         $response = APIHelpers::createApiResponse(false, 200, '', '', $data, $request->lang);
+        return response()->json($response, 200);
+    }
+    public function delete_cv(Request $request,$id){
+        $data['deleted'] = '1';
+        cv::where('id',$id)->update($data);
+        $response = APIHelpers::createApiResponse(false, 200, 'deleted', 'تم الحذف بنجاح', null, $request->lang);
         return response()->json($response, 200);
     }
 
@@ -180,20 +96,20 @@ class HomeController extends Controller
         $response = APIHelpers::createApiResponse(false, 200, '', '', $image, $request->lang);
         return response()->json($response, 200);
     }
-    public function home_page(Request $request)
-    {
-        $data = Main_ad::select('image')->where('deleted', '0')->inRandomOrder()->take(1)->get();
-        if (count($data) == 0) {
-            $response = APIHelpers::createApiResponse(true, 406, 'no ads available',
-                'لا يوجد اعلانات', null, $request->lang);
-            return response()->json($response, 406);
-        }
-        foreach ($data as $image) {
-            $image['image'] = $image->image;
-        }
-        $response = APIHelpers::createApiResponse(false, 200, '', '', $image, $request->lang);
-        return response()->json($response, 200);
-    }
+//    public function home_page(Request $request)
+//    {
+//        $data = Main_ad::select('image')->where('deleted', '0')->inRandomOrder()->take(1)->get();
+//        if (count($data) == 0) {
+//            $response = APIHelpers::createApiResponse(true, 406, 'no ads available',
+//                'لا يوجد اعلانات', null, $request->lang);
+//            return response()->json($response, 406);
+//        }
+//        foreach ($data as $image) {
+//            $image['image'] = $image->image;
+//        }
+//        $response = APIHelpers::createApiResponse(false, 200, '', '', $image, $request->lang);
+//        return response()->json($response, 200);
+//    }
     public function city_filter(Request $request,$area_id)
     {
         $user = auth()->user();

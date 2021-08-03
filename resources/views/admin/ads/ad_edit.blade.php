@@ -88,21 +88,21 @@
                 </label>
                 <div class="custom-file-container__image-preview"></div>
             </div>
-            <div class="form-group">
-                <label for="sel1">{{ __('messages.ad_place') }}</label>
-                <select class="form-control" name="place" id="sel1">
-                    <option selected>{{ __('messages.select') }}</option>
-                    <option {{ $data['ad']['place'] == 1 ? 'selected' : '' }} value="1">{{ __('messages.on_the_top') }}</option>
-                    <option {{ $data['ad']['place'] == 2 ? 'selected' : '' }} value="2">{{ __('messages.on_the_middle') }}</option>
-                </select>
-            </div>
+{{--            <div class="form-group">--}}
+{{--                <label for="sel1">{{ __('messages.ad_place') }}</label>--}}
+{{--                <select class="form-control" name="place" id="sel1">--}}
+{{--                    <option selected>{{ __('messages.select') }}</option>--}}
+{{--                    <option {{ $data['ad']['place'] == 1 ? 'selected' : '' }} value="1">{{ __('messages.on_the_top') }}</option>--}}
+{{--                    <option {{ $data['ad']['place'] == 2 ? 'selected' : '' }} value="2">{{ __('messages.on_the_middle') }}</option>--}}
+{{--                </select>--}}
+{{--            </div>--}}
 
             <div class="form-group">
                 <label for="sel1">{{ __('messages.ad_type') }}</label>
                 <select id="ad_type" name="type" class="form-control">
-                    <option selected>{{ __('messages.select') }}</option>
+{{--                    <option selected>{{ __('messages.select') }}</option>--}}
                     <option {{ $data['ad']['type'] == 'link' ? 'selected' : '' }} value="1">{{ __('messages.outside_the_app') }}</option>
-                    <option {{ $data['ad']['type'] == 'id' ? 'selected' : '' }} value="2">{{ __('messages.inside_the_app') }}</option>
+{{--                    <option {{ $data['ad']['type'] == 'id' ? 'selected' : '' }} value="2">{{ __('messages.inside_the_app') }}</option>--}}
                 </select>
             </div>
 
