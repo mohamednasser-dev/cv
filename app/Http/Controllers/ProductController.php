@@ -857,7 +857,7 @@ class ProductController extends Controller
                     Cv_personal_experience::where('user_id',$user->id)->where('cv_id',null)->update($input);
                     Cv_course::where('user_id',$user->id)->where('cv_id',null)->update($input);
 
-                    $response = APIHelpers::createApiResponse(false, 200, 'cv saved successfully', 'تم حفظ السيرة الذاتية بنجاح', null, $request->lang);
+                    $response = APIHelpers::createApiResponse(false, 200, 'cv saved successfully', 'تم حفظ السيرة الذاتية بنجاح', $cv , $request->lang);
                     return response()->json($response, 200);
                 }else{
                     $response = APIHelpers::createApiResponse(true, 406, 'you should choose design first ...', 'يجب أختيار تصميم أولا  ...', null, $request->lang);
