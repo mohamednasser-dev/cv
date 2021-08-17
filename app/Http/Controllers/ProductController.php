@@ -850,6 +850,7 @@ class ProductController extends Controller
             $data['personal_data'] = cv_personal_data::with('Nationality')->with('City')->where('user_id',$user->id)->where('cv_id',null)->get();
             $data['job_experience'] = Cv_job_experience::select('id','job_name','job_distination','start_date','end_date')->where('user_id',$user->id)->where('cv_id',null)->get();
             $data['certificat'] = Cv_certificat::select('id','certificate_name','degree_specialization','collage_name','start_date','end_date')->where('user_id',$user->id)->where('cv_id',null)->get();
+            $data['hobby'] = Cv_hobby::select('id','name')->where('user_id',$user->id)->where('cv_id',null)->get();
             $data['personal_experience'] = Cv_personal_experience::select('id','job_name','job_distination','start_date','end_date')->where('user_id',$user->id)->where('cv_id',null)->get();
             $data['course'] = Cv_course::select('id','course_name','degree','collage_name','start_date','end_date')->where('user_id',$user->id)->where('cv_id',null)->get();
         }else{
@@ -857,6 +858,7 @@ class ProductController extends Controller
             $data['personal_data'] = cv_personal_data::with('Nationality')->with('City')->where('user_id',$user->id)->where('cv_id',$id)->get();
             $data['job_experience'] = Cv_job_experience::select('id','job_name','job_distination','start_date','end_date')->where('user_id',$user->id)->where('cv_id',$id)->get();
             $data['certificat'] = Cv_certificat::select('id','certificate_name','degree_specialization','collage_name','start_date','end_date')->where('user_id',$user->id)->where('cv_id',$id)->get();
+            $data['hobby'] = Cv_hobby::select('id','name')->where('user_id',$user->id)->where('cv_id',$id)->get();
             $data['personal_experience'] = Cv_personal_experience::select('id','job_name','job_distination','start_date','end_date')->where('user_id',$user->id)->where('cv_id',$id)->get();
             $data['course'] = Cv_course::select('id','course_name','degree','collage_name','start_date','end_date')->where('user_id',$user->id)->where('cv_id',$id)->get();
         }
@@ -881,6 +883,7 @@ class ProductController extends Controller
                     cv_personal_data::where('user_id',$user->id)->where('cv_id',null)->update($input);
                     Cv_job_experience::where('user_id',$user->id)->where('cv_id',null)->update($input);
                     Cv_certificat::where('user_id',$user->id)->where('cv_id',null)->update($input);
+                    Cv_hobby::where('user_id',$user->id)->where('cv_id',null)->update($input);
                     Cv_personal_experience::where('user_id',$user->id)->where('cv_id',null)->update($input);
                     Cv_course::where('user_id',$user->id)->where('cv_id',null)->update($input);
 
