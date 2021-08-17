@@ -12,6 +12,10 @@ class cv_personal_data extends Model
 
         return $this->belongsTo('App\Nationality', 'nationality_id')->select('id','title_'.session('api_lang').' as title');
     }
+    public function Nationality_web() {
+
+        return $this->belongsTo('App\Nationality', 'nationality_id');
+    }
 
     public function User() {
         return $this->belongsTo('App\User', 'user_id');
@@ -22,6 +26,10 @@ class cv_personal_data extends Model
 
     public function City() {
         return $this->belongsTo('App\City', 'city_id')->select('id','title_'.session('api_lang').' as title');
+    }
+
+    public function City_web() {
+        return $this->belongsTo('App\City', 'city_id');
     }
 
 

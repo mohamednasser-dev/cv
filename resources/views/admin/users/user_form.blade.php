@@ -10,15 +10,15 @@
                 <div class="col-xl-12 col-md-12 col-sm-12 col-12">
                     <h4>{{ __('messages.add_new_user') }}</h4>
              </div>
-				
-				
+
+
     </div>
-    
+
     @if (session('status'))
         <div class="alert alert-danger mb-4" role="alert">
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">x</button>
             <strong>Error!</strong> {{ session('status') }} </button>
-        </div> 
+        </div>
     @endif
 
     <form method="post" action="" >
@@ -39,8 +39,8 @@
         <label for="password">{{ __('messages.password') }}</label>
         <input required type="password" class="form-control" id="password" name="password" placeholder="{{ __('messages.password') }}" value="" >
     </div>
-  	
-    <input type="submit" value="{{ __('messages.submit') }}" class="btn btn-primary">
+
+    <input type="submit" value="{{ __('messages.add') }}" class="btn btn-primary">
 </form>
 </div>
 

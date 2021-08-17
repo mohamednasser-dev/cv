@@ -60,6 +60,10 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasMany('App\Product', 'user_id');
     }
 
+    public function Cvs() {
+        return $this->hasMany('App\Cv', 'user_id');
+    }
+
     public function City() {
         return $this->belongsTo('App\City', 'city_id');
     }

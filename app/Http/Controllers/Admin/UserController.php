@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers\Admin;
 
+use App\cv;
 use Illuminate\Support\Facades\Hash;
 use JD\Cloudder\Facades\Cloudder;
 use Illuminate\Http\Request;
@@ -50,12 +51,13 @@ class UserController extends AdminController{
         $current_user->name = $request->name;
         $current_user->phone = $request->phone;
         $current_user->email = $request->email;
-		$current_user->free_ads_count = $request->free_ads_count;
-		$current_user->paid_ads_count = $request->paid_ads_count;
+//		$current_user->free_ads_count = $request->free_ads_count;
+//		$current_user->paid_ads_count = $request->paid_ads_count;
         if($request->password){
             $current_user->password = Hash::make($request->password);
         }
         $current_user->save();
+        session()->flash('success', trans('messages.updated_s'));
         return redirect('admin-panel/users/show');
     }
 
@@ -76,16 +78,18 @@ class UserController extends AdminController{
             return redirect('admin-panel/users/add')->with('status', 'Email Exists Before');
         }
 
-        $setting = Setting::find(1);
-        $free_ads = $setting['free_ads_count'];
+//        $setting = Setting::find(1);
+//        $free_ads = $setting['free_ads_count'];
 
         $user = new User();
         $user->name = $request->name;
         $user->phone = $request->phone;
         $user->email = $request->email;
+        $user->seen = 1 ;
         $user->password = Hash::make($request->password);
-        $user->free_ads_count = $free_ads;
+//        $user->free_ads_count = $free_ads;
         $user->save();
+        session()->flash('success', trans('messages.added_s'));
         return redirect('admin-panel/users/show');
     }
 
@@ -206,5 +210,16 @@ class UserController extends AdminController{
         $data['user'] = $user->name;
 
         return view('admin.products.products', ['data' => $data]);
+    }
+    public function get_user_cvs(User $user) {
+        $data['cvs'] = $user->Cvs;
+        $data['user'] = $user->name;
+
+        return view('admin.users.cvs', ['data' => $data]);
+    }
+    public function get_cv_details($id) {
+        $data =  cv::where('id',$id)->first();
+
+        return view('admin.users.cv_details', compact('data'));
     }
 }

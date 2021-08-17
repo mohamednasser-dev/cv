@@ -72,6 +72,16 @@
                         </a>
                     </li>
                 @endif
+                @if(in_array(17 , Auth::user()->custom['admin_permission']))
+                    <li class="menu nationalities">
+                        <a href="{{route('nationalities.index')}}" class="dropdown-toggle first-link">
+                            <div class="">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg>
+                                <span>{{ __('messages.nationalities') }}</span>
+                            </div>
+                        </a>
+                    </li>
+                @endif
                 @if(in_array(3 , Auth::user()->custom['admin_permission']))
                     <li class="menu ads main_ads">
                         <a href="#ads" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle first-link">
@@ -129,17 +139,6 @@
                         </a>
                     </li>
                 @endif
-                @if(in_array(17 , Auth::user()->custom['admin_permission']))
-                    <li class="menu specialty">
-                        <a href="/admin-panel/specialty" class="dropdown-toggle first-link">
-                            <div class="">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg>
-                                <span>{{ __('messages.specialties') }}</span>
-                            </div>
-                        </a>
-                    </li>
-                @endif
-
                 @if(in_array(6 , Auth::user()->custom['admin_permission']))
                     <li class="menu notifications">
                         <a href="#notifications" data-active="true" data-toggle="collapse" aria-expanded="true"
@@ -229,22 +228,6 @@
                         </a>
                     </li>
                 @endif
-
-                {{--                @if(in_array(8 , Auth::user()->custom['admin_permission']))--}}
-                {{--                    <li class="menu meta_tags">--}}
-                {{--                        <a href="/admin-panel/meta_tags" class="dropdown-toggle first-link">--}}
-                {{--                            <div class="">--}}
-                {{--                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"--}}
-                {{--                                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"--}}
-                {{--                                     stroke-linejoin="round" class="feather feather-search">--}}
-                {{--                                    <circle cx="11" cy="11" r="8"></circle>--}}
-                {{--                                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>--}}
-                {{--                                </svg>--}}
-                {{--                                <span>{{ __('messages.meta_tags') }}</span>--}}
-                {{--                            </div>--}}
-                {{--                        </a>--}}
-                {{--                    </li>--}}
-                {{--                @endif--}}
 
                 @if(in_array(9 , Auth::user()->custom['admin_permission']))
                     <li class="menu managers">

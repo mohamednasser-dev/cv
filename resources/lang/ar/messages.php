@@ -6,7 +6,29 @@ return [
 
 
     'married' => "متزوج",
+    'design_number' => "رقم التصميم",
+    'personal_data' => "البيانات الشخصية",
+    'job_experience' => "الخبرة الوظيفية",
+    'full_name' => "الاسم بالكامل",
+    'social_status' => "الحالة الاجتماعية",
+    'call_details' => "تفاصيل الاتصال",
+    'nationality' => "الجنسية",
+    'location' => "الموقع",
+    'web_site' => "الموقع الإلكتروني",
     'single' => "اعزب",
+    'mail' => "البريد",
+    'job_name' => "مسمى الوظيفة",
+    'job_distination' => "جهة الوظيفة / الشركة",
+    'start_date' => "تاريخ البدأ",
+    'end_date_d' => "تاريخ النهاية",
+    'cv_city' => "المدينة",
+    'certificats' => "الشهادات",
+    'certificate_name' => "اسم الشهادة",
+    'college_name' => "اسم الجامعة / الكلية",
+    'cert_degree' => "الدرجة العلمية و التخصص",
+    'nationalities' => "الجنسيات",
+    'personal_experience' => "الخبرات الشخصية",
+    'cvs' => "السير الذاتية للمستخدم",
 
 
 

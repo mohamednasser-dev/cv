@@ -43,6 +43,8 @@ Route::group(['middleware'=>'language','prefix' => "admin-panel",'namespace' => 
         Route::get('block/{id}' , 'UserController@block');
         Route::get('active/{id}' , 'UserController@active');
         Route::get('products/{user}' , 'UserController@get_user_products')->name('user.products');
+        Route::get('cvs/{user}' , 'UserController@get_user_cvs')->name('user.cvs');
+        Route::get('cv_details/{id}' , 'UserController@get_cv_details')->name('user.cv_details');
     });
 
     // admins routes for dashboard
@@ -95,6 +97,9 @@ Route::group(['middleware'=>'language','prefix' => "admin-panel",'namespace' => 
     Route::post('/cities/area/store' , 'CityController@store_area')->name('area.store');
     Route::post('/cities/area/update/{id}' , 'CityController@update_area')->name('area.update');
     Route::get('/cities/area/delete/{id}' , 'CityController@destroy_area')->name('area.delete');
+
+    Route::resource('nationalities' , 'NationalityController');
+    Route::get('/nationalities/delete/{id}' , 'NationalityController@destroy')->name('delete.nationalities');
 
     Route::resource('balance_packages' , 'BalanceBackagesController');
     Route::post('/balance_p/update/{id}' , 'BalanceBackagesController@update')->name('balance_p.update');

@@ -1,6 +1,6 @@
 @extends('admin.app')
 
-@section('title' , __('messages.cities'))
+@section('title' , __('messages.nationalities'))
 
 @section('content')
     <div id="tableSimple" class="col-lg-12 col-12 layout-spacing">
@@ -8,12 +8,12 @@
             <div class="widget-header">
                 <div class="row">
                     <div class="col-md-6 col-sm-6 col-12">
-                        <h4>{{ __('messages.cities') }}</h4>
+                        <h4>{{ __('messages.nationalities') }}</h4>
                     </div>
                 </div>
                 @if(Auth::user()->add_data)
                     <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-                        <a class="btn btn-primary" href="{{route('cities.create')}}">{{ __('messages.add') }}</a>
+                        <a class="btn btn-primary" href="{{route('nationalities.create')}}">{{ __('messages.add') }}</a>
                     </div>
                 @endif
             </div>
@@ -40,7 +40,7 @@
                                 <td class="text-center"><?=$i;?></td>
                                 <td class="text-center blue-color">{{ app()->getLocale() == 'en' ? $row->title_en : $row->title_ar }}</td>
                                 {{--                                <td class="text-center blue-color">--}}
-                                {{--                                    <a href="{{route('cities.show',$row->id)}}">--}}
+                                {{--                                    <a href="{{route('nationalities.show',$row->id)}}">--}}
                                 {{--                                        <div class="">--}}
                                 {{--                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"--}}
                                 {{--                                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"--}}
@@ -53,13 +53,14 @@
                                 {{--                                    </a>--}}
                                 {{--                                </td>--}}
                                 @if(Auth::user()->update_data)
-                                    <td class="text-center blue-color"><a href="{{ route('cities.edit', $row->id) }}"><i
+                                    <td class="text-center blue-color"><a
+                                            href="{{ route('nationalities.edit', $row->id) }}"><i
                                                 class="far fa-edit"></i></a></td>
                                 @endif
                                 @if(Auth::user()->delete_data)
                                     <td class="text-center blue-color"><a
                                             onclick="return confirm('{{ __('messages.are_you_sure') }}');"
-                                            href="{{ route('delete.cities', $row->id) }}"><i
+                                            href="{{ route('delete.nationalities', $row->id) }}"><i
                                                 class="far fa-trash-alt"></i></a></td>
                                 @endif
                                 <?php $i++; ?>
