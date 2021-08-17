@@ -15,6 +15,11 @@ class CreateCvHobbiesTable extends Migration
     {
         Schema::create('cv_hobbies', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->string('name');
+            $table->bigInteger('user_id')->unsigned();
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('restrict');
+            $table->bigInteger('cv_id')->unsigned()->nullable();
+            $table->foreign('cv_id')->references('id')->on('cvs')->onDelete('restrict');
             $table->timestamps();
         });
     }

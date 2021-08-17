@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Cv_certificat;
 use App\Cv_course;
 use App\Cv_design;
+use App\Cv_hobby;
 use App\Cv_job_experience;
 use App\cv_personal_data;
 use App\Cv_personal_experience;
@@ -43,9 +44,9 @@ class ProductController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['delete_job_experience','delete_certifications','save_certifications','get_job_experience','get_certifications','save_job_experience','save_design','select_my_ads', 'all_comments', 'make_comment', 'make_report', 'ad_owner_info', 'current_ads', 'ended_ads', 'max_min_price', 'filter', 'offer_ads', 'republish_ad',
+        $this->middleware('auth:api', ['except' => ['delete_job_experience','delete_hobbies','delete_certifications','save_certifications','get_job_experience','get_certifications','save_job_experience','save_design','select_my_ads', 'all_comments', 'make_comment', 'make_report', 'ad_owner_info', 'current_ads', 'ended_ads', 'max_min_price', 'filter', 'offer_ads', 'republish_ad',
             'areas', 'cities', 'third_step_excute_pay', 'save_third_step_with_money', 'update_ad', 'select_ad_data', 'delete_my_ad',
-            'save_third_step', 'save_second_step', 'getdetails', 'last_seen', 'getoffers', 'getproducts','map_ads', 'getsearch', 'getFeatureOffers']]);
+            'save_third_step', 'save_second_step','get_hobbies', 'getdetails', 'last_seen', 'getoffers', 'getproducts','map_ads', 'getsearch', 'getFeatureOffers']]);
     }
 
 
@@ -806,6 +807,32 @@ class ProductController extends Controller
                 $input['user_id'] = $user->id;
                 Cv_certificat::create($input);
                 $response = APIHelpers::createApiResponse(false, 200, 'Certificate saved successfully', 'تم حفظ الشهادة بنجاح', null, $request->lang);
+                return response()->json($response, 200);
+            } else {
+                $response = APIHelpers::createApiResponse(true, 406, '', 'يجب تسجيل الدخول اولا', null, $request->lang);
+                return response()->json($response, 406);
+            }
+        }
+    }
+    public function save_hobbies(Request $request)
+    {
+        $input = $request->all();
+        $validator = Validator::make($input, [
+            'name' => 'required',
+            'cv_id' => 'required'
+        ]);
+        if ($validator->fails()) {
+            $response = APIHelpers::createApiResponse(true, 406, $validator->messages()->first(), $validator->messages()->first(), null, $request->lang);
+            return response()->json($response, 406);
+        } else {
+            $user = auth()->user();
+            if ($user != null) {
+                if($request->cv_id == 0){
+                    unset($input['cv_id']);
+                }
+                $input['user_id'] = $user->id;
+                Cv_hobby::create($input);
+                $response = APIHelpers::createApiResponse(false, 200, 'Hobby saved successfully', 'تم حفظ الهواية بنجاح', null, $request->lang);
                 return response()->json($response, 200);
             } else {
                 $response = APIHelpers::createApiResponse(true, 406, '', 'يجب تسجيل الدخول اولا', null, $request->lang);
@@ -1764,6 +1791,17 @@ class ProductController extends Controller
         $response = APIHelpers::createApiResponse(false, 200, '', '',  $data, $request->lang);
         return response()->json($response, 200);
     }
+    public function get_hobbies(Request $request,$id)
+    {
+        $user = auth()->user();
+        if($id == 0){
+            $data = Cv_hobby::select('id','name')->where('user_id',$user->id)->where('cv_id',null)->get();
+        }else{
+            $data = Cv_hobby::select('id','name')->where('user_id',$user->id)->where('cv_id',$id)->get();
+        }
+        $response = APIHelpers::createApiResponse(false, 200, '', '',  $data, $request->lang);
+        return response()->json($response, 200);
+    }
     public function get_course(Request $request,$id)
     {
         $user = auth()->user();
@@ -1793,6 +1831,12 @@ class ProductController extends Controller
     {
         $data = Cv_certificat::where('id',$id)->delete();
         $response = APIHelpers::createApiResponse(false, 200, 'Certificate deleted successfully', 'تم حذف الشهادة بنجاح', null , $request->lang);
+        return response()->json($response, 200);
+    }
+    public function delete_hobbies(Request $request,$id)
+    {
+        $data = Cv_hobby::where('id',$id)->delete();
+        $response = APIHelpers::createApiResponse(false, 200, 'Hobby deleted successfully', 'تم حذف الهواية بنجاح', null , $request->lang);
         return response()->json($response, 200);
     }
     public function delete_course(Request $request,$id)
