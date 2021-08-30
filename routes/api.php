@@ -168,6 +168,7 @@ use Illuminate\Http\Request;
 
     // save cv apis ...
     Route::get('/cv_preview/{id}/{lang}/{v}' , 'ProductController@cv_preview');
+    Route::get('/CV_print/{id}/{lang}/{v}' , 'ProductController@CV_print');
     Route::get('/save_previewed_cv/{lang}/{v}' , 'ProductController@save_previewed_cv');
 
     // first step select design ...

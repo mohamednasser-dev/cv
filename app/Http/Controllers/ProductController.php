@@ -39,6 +39,7 @@ use App\Plan;
 use App\City;
 use App\Area;
 use App\cv;
+use PDF;
 
 class ProductController extends Controller
 {
@@ -692,16 +693,24 @@ class ProductController extends Controller
         } else {
             $user = auth()->user();
             if ($user != null) {
-
-
                 if ($request->image != null) {
                     $image = $request->image;
-                    Cloudder::upload("data:image/jpeg;base64," . $image, null);
-                    $imagereturned = Cloudder::getResult();
-                    $image_id = $imagereturned['public_id'];
-                    $image_format = $imagereturned['format'];
-                    $image_new_name = $image_id . '.' . $image_format;
-                    $input['image'] = $image_new_name ;
+//                    Cloudder::upload("data:image/jpeg;base64," . $image, null);
+//                    $imagereturned = Cloudder::getResult();
+//                    $image_id = $imagereturned['public_id'];
+//                    $image_format = $imagereturned['format'];
+//                    $image_new_name = $image_id . '.' . $image_format;
+//                    $input['image'] = $image_new_name ;
+
+
+                    $imagereturned = Cloudinary::upload("data:image/jpeg;base64,".$image);
+                    $image_id = $imagereturned->getPublicId();
+                    $image_format = $imagereturned->getExtension();
+                    $image_new_name = $image_id.'.'.$image_format;
+                    $input['image'] = $image_new_name;
+
+                }else{
+                    unset($input['image']);
                 }
 
                 if($request->cv_id == 0){
@@ -864,6 +873,33 @@ class ProductController extends Controller
         }
         $response = APIHelpers::createApiResponse(false, 200, '', '',  $data, $request->lang);
         return response()->json($response, 200);
+    }
+    public function CV_print(Request $request,$id)
+    {
+        $user = auth()->user();
+        Session::put('api_lang', $request->lang);
+        if($id == 0){
+            $data['design'] = Cv_design::select('id','design_number')->where('user_id',$user->id)->where('cv_id',null)->get();
+            $data['personal_data'] = cv_personal_data::with('Nationality')->with('City')->where('user_id',$user->id)->where('cv_id',null)->first();
+            $data['job_experience'] = Cv_job_experience::select('id','job_name','job_distination','start_date','end_date')->where('user_id',$user->id)->where('cv_id',null)->get();
+            $data['certificat'] = Cv_certificat::select('id','certificate_name','degree_specialization','collage_name','start_date','end_date')->where('user_id',$user->id)->where('cv_id',null)->get();
+            $data['hobby'] = Cv_hobby::select('id','name')->where('user_id',$user->id)->where('cv_id',null)->get();
+            $data['personal_experience'] = Cv_personal_experience::select('id','job_name','job_distination','start_date','end_date')->where('user_id',$user->id)->where('cv_id',null)->get();
+            $data['course'] = Cv_course::select('id','course_name','degree','collage_name','start_date','end_date')->where('user_id',$user->id)->where('cv_id',null)->get();
+        }else{
+            $data['design'] = Cv_design::select('id','design_number')->where('user_id',$user->id)->where('cv_id',$id)->get();
+            $data['personal_data'] = cv_personal_data::with('Nationality')->with('City')->where('user_id',$user->id)->where('cv_id',$id)->first();
+            $data['job_experience'] = Cv_job_experience::select('id','job_name','job_distination','start_date','end_date')->where('user_id',$user->id)->where('cv_id',$id)->get();
+            $data['certificat'] = Cv_certificat::select('id','certificate_name','degree_specialization','collage_name','start_date','end_date')->where('user_id',$user->id)->where('cv_id',$id)->get();
+            $data['hobby'] = Cv_hobby::select('id','name')->where('user_id',$user->id)->where('cv_id',$id)->get();
+            $data['personal_experience'] = Cv_personal_experience::select('id','job_name','job_distination','start_date','end_date')->where('user_id',$user->id)->where('cv_id',$id)->get();
+            $data['course'] = Cv_course::select('id','course_name','degree','collage_name','start_date','end_date')->where('user_id',$user->id)->where('cv_id',$id)->get();
+        }
+
+//        $pdf = PDF::loadView('webview.app_cv_design.default_design', ['data' => $data]);//    }else{
+        $pdf = PDF::loadView('webview.app_cv_design.test_print', ['data' => $data,'lang'=>$request->lang]);//    }else{
+        return $pdf->stream('cv_print.pdf');
+
     }
 
     public function save_previewed_cv(Request $request)
