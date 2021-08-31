@@ -39,6 +39,7 @@ use App\Plan;
 use App\City;
 use App\Area;
 use App\cv;
+use Cloudinary;
 use PDF;
 
 class ProductController extends Controller
@@ -694,21 +695,12 @@ class ProductController extends Controller
             $user = auth()->user();
             if ($user != null) {
                 if ($request->image != null) {
-                    $image = $request->image;
-//                    Cloudder::upload("data:image/jpeg;base64," . $image, null);
-//                    $imagereturned = Cloudder::getResult();
-//                    $image_id = $imagereturned['public_id'];
-//                    $image_format = $imagereturned['format'];
-//                    $image_new_name = $image_id . '.' . $image_format;
-//                    $input['image'] = $image_new_name ;
 
-
-                    $imagereturned = Cloudinary::upload("data:image/jpeg;base64,".$image);
-                    $image_id = $imagereturned->getPublicId();
-                    $image_format = $imagereturned->getExtension();
-                    $image_new_name = $image_id.'.'.$image_format;
-                    $input['image'] = $image_new_name;
-
+                    $logoreturned = Cloudinary::upload("data:image/jpeg;base64," . $request->image) ;
+                    $logo_id = $logoreturned->getPublicId();;
+                    $logo_format = $logoreturned->getExtension();;
+                    $logo_new_name = $logo_id.'.'.$logo_format;
+                    $input['image'] = $logo_new_name;
                 }else{
                     unset($input['image']);
                 }

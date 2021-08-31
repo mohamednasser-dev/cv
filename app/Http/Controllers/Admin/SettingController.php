@@ -1,7 +1,9 @@
 <?php
 namespace App\Http\Controllers\Admin;
 
-use JD\Cloudder\Facades\Cloudder;
+//use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
+//use JD\Cloudder\Facades\Cloudder;
+use Cloudinary;
 use Illuminate\Http\Request;
 use App\Setting;
 
@@ -17,14 +19,10 @@ class SettingController extends AdminController{
     public function PostSetting(Request $request){
         $setting = Setting::find(1);
         if($request->file('logo')){
-            $logo = $setting->logo;
-            $publicId = substr($logo , 0 , strrpos($logo , "."));
-            Cloudder::delete($publicId);
-            $logo_name = $request->file('logo')->getRealPath();
-            Cloudder::upload($logo_name , null);
-            $logoreturned = Cloudder::getResult();
-            $logo_id = $logoreturned['public_id'];
-            $logo_format = $logoreturned['format'];
+            $image_name = $request->file('logo')->getRealPath();
+            $logoreturned = Cloudinary::upload($image_name) ;
+            $logo_id = $logoreturned->getPublicId();;
+            $logo_format = $logoreturned->getExtension();;
             $logo_new_name = $logo_id.'.'.$logo_format;
             $setting->logo = $logo_new_name;
         }
