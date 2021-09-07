@@ -88,6 +88,7 @@ Route::group(['middleware'=>'language','prefix' => "admin-panel",'namespace' => 
         Route::get('delete/{id}' , 'Ads\AdController@delete');
         Route::get('fetchproducts/{userId}' , 'Ads\AdController@fetch_products')->name("products.fetch");
     });
+    Route::resource('designs' , 'DesignsController');
     Route::resource('payments' , 'PaymentsController');
     Route::resource('cities' , 'CityController');
     Route::get('/cities/delete/{id}' , 'CityController@destroy')->name('delete.cities');

@@ -172,6 +172,7 @@ use Illuminate\Http\Request;
     Route::get('/save_previewed_cv/{lang}/{v}' , 'ProductController@save_previewed_cv');
 
     // first step select design ...
+    Route::get('/get_designs/{lang}/{v}' , 'ProductController@get_designs');
     Route::post('/save_design/{lang}/{v}' , 'ProductController@save_design');
 
     // second step personal data ...

@@ -9,6 +9,7 @@ use App\Cv_hobby;
 use App\Cv_job_experience;
 use App\cv_personal_data;
 use App\Cv_personal_experience;
+use App\Design;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Session;
 use JD\Cloudder\Facades\Cloudder;
@@ -48,7 +49,7 @@ class ProductController extends Controller
     {
         $this->middleware('auth:api', ['except' => ['delete_job_experience','delete_hobbies','delete_certifications','save_certifications','get_job_experience','get_certifications','save_job_experience','save_design','select_my_ads', 'all_comments', 'make_comment', 'make_report', 'ad_owner_info', 'current_ads', 'ended_ads', 'max_min_price', 'filter', 'offer_ads', 'republish_ad',
             'areas', 'cities', 'third_step_excute_pay', 'save_third_step_with_money', 'update_ad', 'select_ad_data', 'delete_my_ad',
-            'save_third_step', 'save_second_step','get_hobbies', 'getdetails', 'last_seen', 'getoffers', 'getproducts','map_ads', 'getsearch', 'getFeatureOffers']]);
+            'save_third_step', 'save_second_step','get_designs','get_hobbies', 'getdetails', 'last_seen', 'getoffers', 'getproducts','map_ads', 'getsearch', 'getFeatureOffers']]);
     }
 
 
@@ -624,6 +625,14 @@ class ProductController extends Controller
         for ($i = 0; $i < count($products); $i++) {
             $products[$i]['image'] = ProductImage::where('product_id', $products[$i]['id'])->select('image')->first()['image'];
         }
+        $response = APIHelpers::createApiResponse(false, 200, '', '', $products, $request->lang);
+        return response()->json($response, 200);
+    }
+    public function get_designs(Request $request)
+    {
+        $lang = $request->lang ;
+        $products = Design::select('id','title_'.$lang.' as title','image')->simplePaginate(12);
+
         $response = APIHelpers::createApiResponse(false, 200, '', '', $products, $request->lang);
         return response()->json($response, 200);
     }

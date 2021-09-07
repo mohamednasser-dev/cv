@@ -5,6 +5,10 @@ return [
 
 
 
+    'free' => "مجاناْ",
+    'payed' => "مدفوع",
+
+    'designs' => "التصميمات",
     'married' => "متزوج",
     'design_number' => "رقم التصميم",
     'personal_data' => "البيانات الشخصية",
