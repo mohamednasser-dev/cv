@@ -24,6 +24,7 @@
           integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <link href='https://fonts.googleapis.com/css2?family=Cairo' rel='stylesheet'>
 
+
     <style>
         /*
     ---------------------------------------------------------------------------------
@@ -261,7 +262,7 @@
     </style>
 </head>
 
-<body>
+<body style="font-family: DejaVu Sans, sans-serif ;">
 
 <div id="doc2" class="yui-t7">
     <div id="inner">
