@@ -34,13 +34,6 @@ class cv_personal_data extends Model
 
 
 
-    public function getSocialStatusAttribute($value)
-    {
-        if ($value == 1) {
-            return trans('messages.married');
-        } else {
-            return trans('messages.single');
-        }
-    }
+
 
 }

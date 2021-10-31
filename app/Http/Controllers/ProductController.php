@@ -704,7 +704,6 @@ class ProductController extends Controller
             $user = auth()->user();
             if ($user != null) {
                 if ($request->image != null) {
-
                     $logoreturned = Cloudinary::upload("data:image/jpeg;base64," . $request->image) ;
                     $logo_id = $logoreturned->getPublicId();;
                     $logo_format = $logoreturned->getExtension();;
@@ -716,17 +715,18 @@ class ProductController extends Controller
 
                 if($request->cv_id == 0){
                     unset($input['cv_id']);
+                    $exist_job = cv_personal_data::where('cv_id',null)->where('user_id',$user->id)->first();
+                }else{
+                    $exist_job = cv_personal_data::where('cv_id',$request->cv_id)->where('user_id',$user->id)->first();
+                }
+                if($exist_job){
+                    cv_personal_data::where('id',$exist_job->id)->update($input);
+                }else{
                     $input['user_id'] = $user->id;
                     cv_personal_data::create($input);
-                    $response = APIHelpers::createApiResponse(false, 200, 'Your personal data has been saved successfully', 'تم حفظ البيانات الشخصية بنجاح', null, $request->lang);
-                    return response()->json($response, 200);
-                }else{
-                    unset($input['cv_id']);
-                    cv_personal_data::where('cv_id',$request->cv_id )->update($input);
-                    $response = APIHelpers::createApiResponse(false, 200, 'Your personal data has been updated successfully', 'تم تعديل البيانات الشخصية بنجاح', null, $request->lang);
-                    return response()->json($response, 200);
                 }
-
+                $response = APIHelpers::createApiResponse(false, 200, 'Your personal data has been saved successfully', 'تم حفظ البيانات الشخصية بنجاح', null, $request->lang);
+                return response()->json($response, 200);
             } else {
                 $response = APIHelpers::createApiResponse(true, 406, '', 'يجب تسجيل الدخول اولا', null, $request->lang);
                 return response()->json($response, 406);
@@ -740,6 +740,7 @@ class ProductController extends Controller
         $validator = Validator::make($input, [
             'job_name' => 'required',
             'job_distination' => 'required',
+            'job_description' => 'required',
             'start_date' => 'required',
             'end_date' => 'required',
             'cv_id' => 'required'
@@ -1792,9 +1793,9 @@ class ProductController extends Controller
     {
         $user = auth()->user();
         if($id == 0){
-            $data = Cv_job_experience::select('id','job_name','job_distination','start_date','end_date')->where('user_id',$user->id)->where('cv_id',null)->get();
+            $data = Cv_job_experience::select('id','job_name','job_description','job_distination','start_date','end_date')->where('user_id',$user->id)->where('cv_id',null)->get();
         }else{
-            $data = Cv_job_experience::select('id','job_name','job_distination','start_date','end_date')->where('user_id',$user->id)->where('cv_id',$id)->get();
+            $data = Cv_job_experience::select('id','job_name','job_description','job_distination','start_date','end_date')->where('user_id',$user->id)->where('cv_id',$id)->get();
         }
         $response = APIHelpers::createApiResponse(false, 200, '', '',  $data, $request->lang);
         return response()->json($response, 200);
@@ -1802,6 +1803,7 @@ class ProductController extends Controller
 
     public function get_personal_experience(Request $request,$id)
     {
+        Session::put('api_lang', $request->lang);
         $user = auth()->user();
         if($id == 0){
             $data = Cv_personal_experience::select('id','job_name','job_distination','start_date','end_date')->where('user_id',$user->id)->where('cv_id',null)->get();
@@ -1813,11 +1815,12 @@ class ProductController extends Controller
     }
     public function get_personal_data(Request $request,$id)
     {
+        Session::put('api_lang', $request->lang);
         $user = auth()->user();
         if($id == 0){
-            $data = cv_personal_data::where('user_id',$user->id)->where('cv_id',null)->get();
+            $data = cv_personal_data::with('City')->where('user_id',$user->id)->where('cv_id',null)->first();
         }else{
-            $data = cv_personal_data::where('user_id',$user->id)->where('cv_id',$id)->get();
+            $data = cv_personal_data::with('City')->where('user_id',$user->id)->where('cv_id',$id)->first();
         }
         $response = APIHelpers::createApiResponse(false, 200, '', '',  $data, $request->lang);
         return response()->json($response, 200);
