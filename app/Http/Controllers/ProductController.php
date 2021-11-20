@@ -689,6 +689,7 @@ class ProductController extends Controller
             'nationality_id' => '',
             'date_of_birth' => '',
             'social_status' => '',
+            'license' => '',
             'email' => '',
             'phone' => '',
             'web_site' => '',
