@@ -879,6 +879,7 @@ class ProductController extends Controller
     }
     public function CV_print(Request $request,$id)
     {
+        ini_set('max_execution_time', 300);
         $user = auth()->user();
         Session::put('api_lang', $request->lang);
         if($id == 0){
