@@ -13,7 +13,7 @@ class cv extends Model
     }
 
     public function Personal_data() {
-        return $this->hasOne('App\cv_personal_data', 'cv_id')->select('id','full_name','image','cv_id');
+        return $this->hasOne('App\cv_personal_data', 'cv_id')->select('id','full_name','image','cv_id','city_id')->with('City');
     }
     public function Personal_data_all() {
         return $this->hasOne('App\cv_personal_data', 'cv_id');
