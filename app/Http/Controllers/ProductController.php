@@ -862,17 +862,17 @@ class ProductController extends Controller
             $data['personal_data'] = cv_personal_data::with('Nationality')->with('City')->where('user_id',$user->id)->where('cv_id',null)->first();
             $data['job_experience'] = Cv_job_experience::select('id','job_name','job_distination','start_date','end_date')->where('user_id',$user->id)->where('cv_id',null)->get();
             $data['certificat'] = Cv_certificat::select('id','certificate_name','degree_specialization','collage_name','start_date','end_date')->where('user_id',$user->id)->where('cv_id',null)->get();
-            $data['hobby'] = Cv_hobby::select('id','name')->where('user_id',$user->id)->where('cv_id',null)->get();
-            $data['personal_experience'] = Cv_personal_experience::select('id','job_name','job_distination','start_date','end_date')->where('user_id',$user->id)->where('cv_id',null)->get();
-            $data['course'] = Cv_course::select('id','course_name','degree','collage_name','start_date','end_date')->where('user_id',$user->id)->where('cv_id',null)->get();
+//            $data['hobby'] = Cv_hobby::select('id','name')->where('user_id',$user->id)->where('cv_id',null)->get();
+//            $data['personal_experience'] = Cv_personal_experience::select('id','job_name','job_distination','start_date','end_date')->where('user_id',$user->id)->where('cv_id',null)->get();
+//            $data['course'] = Cv_course::select('id','course_name','degree','collage_name','start_date','end_date')->where('user_id',$user->id)->where('cv_id',null)->get();
         }else{
             $data['design'] = Cv_design::select('id','design_number')->where('user_id',$user->id)->where('cv_id',$id)->first();
             $data['personal_data'] = cv_personal_data::with('Nationality')->with('City')->where('user_id',$user->id)->where('cv_id',$id)->first();
             $data['job_experience'] = Cv_job_experience::select('id','job_name','job_distination','start_date','end_date')->where('user_id',$user->id)->where('cv_id',$id)->get();
             $data['certificat'] = Cv_certificat::select('id','certificate_name','degree_specialization','collage_name','start_date','end_date')->where('user_id',$user->id)->where('cv_id',$id)->get();
-            $data['hobby'] = Cv_hobby::select('id','name')->where('user_id',$user->id)->where('cv_id',$id)->get();
-            $data['personal_experience'] = Cv_personal_experience::select('id','job_name','job_distination','start_date','end_date')->where('user_id',$user->id)->where('cv_id',$id)->get();
-            $data['course'] = Cv_course::select('id','course_name','degree','collage_name','start_date','end_date')->where('user_id',$user->id)->where('cv_id',$id)->get();
+//            $data['hobby'] = Cv_hobby::select('id','name')->where('user_id',$user->id)->where('cv_id',$id)->get();
+//            $data['personal_experience'] = Cv_personal_experience::select('id','job_name','job_distination','start_date','end_date')->where('user_id',$user->id)->where('cv_id',$id)->get();
+//            $data['course'] = Cv_course::select('id','course_name','degree','collage_name','start_date','end_date')->where('user_id',$user->id)->where('cv_id',$id)->get();
         }
         $response = APIHelpers::createApiResponse(false, 200, '', '',  $data, $request->lang);
         return response()->json($response, 200);
