@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class cv_personal_data extends Model
 {
-    protected $fillable = ['image','full_name','nationality_id', 'date_of_birth','social_status','email', 'phone','web_site', 'address','mail','user_id', 'city_id','cv_id'];
+    protected $fillable = ['license','image','full_name','nationality_id', 'date_of_birth','social_status','email', 'phone','web_site', 'address','mail','user_id', 'city_id','cv_id'];
 
     public function Nationality() {
 

@@ -689,6 +689,7 @@ class ProductController extends Controller
             'nationality_id' => '',
             'date_of_birth' => '',
             'social_status' => '',
+            'license' => '',
             'email' => '',
             'phone' => '',
             'web_site' => '',
@@ -873,11 +874,13 @@ class ProductController extends Controller
             $data['personal_experience'] = Cv_personal_experience::select('id','job_name','job_distination','start_date','end_date')->where('user_id',$user->id)->where('cv_id',$id)->get();
             $data['course'] = Cv_course::select('id','course_name','degree','collage_name','start_date','end_date')->where('user_id',$user->id)->where('cv_id',$id)->get();
         }
+
         $response = APIHelpers::createApiResponse(false, 200, '', '',  $data, $request->lang);
         return response()->json($response, 200);
     }
     public function CV_print(Request $request,$id)
     {
+        ini_set('max_execution_time', 300);
         $user = auth()->user();
         Session::put('api_lang', $request->lang);
         if($id == 0){
@@ -903,7 +906,7 @@ class ProductController extends Controller
         $num = rand(00000,99999) .time();
 
         $pdf->save(public_path() .'/uploads/cvs/'.$num.'.pdf');
-        $response = APIHelpers::createApiResponse(false, 200, '', '',  public_path() .'/uploads/cvs/'.$num.'.pdf', $request->lang);
+        $response = APIHelpers::createApiResponse(false, 200, '', '',  env('APP_URL')  .'/uploads/cvs/'.$num.'.pdf', $request->lang);
         return response()->json($response, 200);
     }
 
@@ -913,7 +916,6 @@ class ProductController extends Controller
             $user = auth()->user();
             if ($user != null) {
                 $exuists_design = Cv_design::where('user_id',$user->id)->where('cv_id',null)->first();
-
                 if($exuists_design != null){
                     $data['user_id'] = $user->id;
                     $data['design_number'] = $exuists_design->design_number;
