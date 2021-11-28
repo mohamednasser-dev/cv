@@ -19,4 +19,8 @@ class HomeController extends AdminController{
         return view('admin.home' , ['data' => $data]);
     }
 
+  public function test_design(){
+        return view('webview.app_cv_design.first_design');
+    }
+
 }
