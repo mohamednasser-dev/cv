@@ -880,7 +880,7 @@ class ProductController extends Controller
     }
     public function CV_print(Request $request,$id)
     {
-        dd('here');
+      
         ini_set('max_execution_time', 300);
 
         $user = auth()->user();
