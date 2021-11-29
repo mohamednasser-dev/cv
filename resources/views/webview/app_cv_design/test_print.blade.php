@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    @dd('jjjj')
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -240,7 +241,7 @@
                     <div class="row">
 
                         <div class="col-md-11"> <h1>{{$data['personal_data']->full_name}}</h1></div>
-                       
+
                     </div>
 
                 </div>
