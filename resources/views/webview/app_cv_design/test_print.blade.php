@@ -240,9 +240,7 @@
                     <div class="row">
 
                         <div class="col-md-11"> <h1>{{$data['personal_data']->full_name}}</h1></div>
-                        <div class="col-md-1">
-                            <img src="https://res.cloudinary.com/dxaqyslkq/image/upload/w_100,q_100/v1581928924/{{$data['personal_data']->image}}">
-                        </div>
+                       
                     </div>
 
                 </div>
