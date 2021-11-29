@@ -880,7 +880,7 @@ class ProductController extends Controller
     }
     public function CV_print(Request $request,$id)
     {
-        ini_set('max_execution_time', 300);
+        ini_set('max_execution_time', 30000);
         $user = auth()->user();
         Session::put('api_lang', $request->lang);
         if($id == 0){
@@ -902,7 +902,8 @@ class ProductController extends Controller
         }
 
 //        $pdf = PDF::loadView('webview.app_cv_design.default_design', ['data' => $data]);//    }else{
-        $pdf = PDF::loadView('webview.app_cv_design.test_print', ['data' => $data,'lang'=>$request->lang]);
+//        $pdf = PDF::loadView('webview.app_cv_design.test_print', ['data' => $data,'lang'=>$request->lang]);
+        $pdf = PDF::loadView('webview.app_cv_design.first_design', ['data' => $data,'lang'=>$request->lang]);
         $num = rand(00000,99999) .time();
 
         $pdf->save(public_path() .'/uploads/cvs/'.$num.'.pdf');

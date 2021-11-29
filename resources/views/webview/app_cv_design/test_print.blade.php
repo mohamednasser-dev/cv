@@ -1,50 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- <style>
-     @page { size: 500pt 500pt; }
-     </style> -->
-    <!-- <meta charset="utf-8"> -->
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <title>Report</title>
-{{--    <meta http-equiv="content-type" content="text/html; charset=utf-8" />--}}
-
-{{--    <meta name="keywords" content="" />--}}
-{{--    <meta name="description" content="" />--}}
-
-{{--    <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.7.0/build/reset-fonts-grids/reset-fonts-grids.css" media="all" />--}}
-{{--    <link rel="stylesheet" type="text/css" href="/cv_design/default_design/resume.css" media="all" />--}}
-
-<!-- Bootstrap -->
-    <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
           integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <link href='https://fonts.googleapis.com/css2?family=Cairo' rel='stylesheet'>
-
-
     <style>
-        /*
-    ---------------------------------------------------------------------------------
-        STRIPPED DOWN RESUME TEMPLATE
-        html resume
-
-        v0.9: 5/28/09
-
-        design and code by: thingsthatarebrown.com
-                            (matt brown)
-    ---------------------------------------------------------------------------------
-    */
-
-
         .msg {
             padding: 10px;
             background: #222;
             position: relative;
         }
-
         .msg h1 {
             color: #fff;
         }
@@ -78,14 +47,14 @@
         .yui-gf {
             margin-bottom: 2em;
             padding-bottom: 2em;
-            border-bottom: 1px solid #ccc;
+
         }
 
         /* //-- header, body, footer -- */
         #hd {
             margin: 2.5em 0 3em 0;
             padding-bottom: 1.5em;
-            border-bottom: 1px solid #ccc
+
         }
 
         #hd h2 {
@@ -149,7 +118,7 @@
 
         li {
             line-height: 24px;
-            border-bottom: 1px solid #ccc;
+
         }
 
         p.enlarge {
@@ -170,9 +139,7 @@
             font-style: italic;
         }
 
-        .last {
-            border-bottom: 0
-        }
+
 
 
         /* //-- section styles -- */
@@ -195,7 +162,7 @@
             position: relative;
             margin-bottom: 1em;
             padding-bottom: 1em;
-            border-bottom: 1px solid #ccc;
+
         }
 
         .job h4 {
@@ -262,7 +229,7 @@
     </style>
 </head>
 
-<body style="font-family: DejaVu Sans, sans-serif ;">
+<body style="font-family: DejaVu Sans, sans-serif ;direction: rtl;" >
 
 <div id="doc2" class="yui-t7">
     <div id="inner">
@@ -270,99 +237,274 @@
         <div id="hd">
             <div class="yui-gc">
                 <div class="yui-u">
-                    <h1>{{$data['personal_data']->full_name}}</h1>
+                    <div class="row">
+
+                        <div class="col-md-11"> <h1>{{$data['personal_data']->full_name}}</h1></div>
+                        <div class="col-md-1">
+                            <img src="https://res.cloudinary.com/dxaqyslkq/image/upload/w_100,q_100/v1581928924/{{$data['personal_data']->image}}">
+                        </div>
+                    </div>
+
                 </div>
                 <div class="yui-u">
                     <div class="contact-info">
-                        <h3><a href="mailto:name@yourdomain.com">{{$data['personal_data']->email}}</a></h3>
-                        <h3>{{$data['personal_data']->phone}}</h3>
-                        <h3>{{$data['personal_data']->address}}</h3>
+                        @if($data['personal_data']->Nationality)
+                            <div
+                                class="elementor-element elementor-element-ef1a90f elementor-widget elementor-widget-heading"
+                                data-id="ef1a90f" data-element_type="widget" data-widget_type="heading.default">
+                                <div class="elementor-widget-container">
+                                    <h6 class="elementor-heading-title elementor-size-default"> الجنسية: {{$data['personal_data']->Nationality->title}}</h6></div>
+                            </div>
+                        @endif
+                        @if($data['personal_data']->date_of_birth)
+                            <div
+                                class="elementor-element elementor-element-2e715ad elementor-widget elementor-widget-heading"
+                                data-id="2e715ad" data-element_type="widget" data-widget_type="heading.default">
+                                <div class="elementor-widget-container">
+                                    <h6 class="elementor-heading-title elementor-size-default">تاريخ الميلاد: {{$data['personal_data']->date_of_birth}}</h6>
+                                </div>
+                            </div>
+                        @endif
+                        @if($data['personal_data']->social_status)
+                            <div
+                                class="elementor-element elementor-element-fa5f3d0 elementor-widget elementor-widget-heading"
+                                data-id="fa5f3d0" data-element_type="widget" data-widget_type="heading.default">
+                                <div class="elementor-widget-container">
+                                    <h6 class="elementor-heading-title elementor-size-default">الحالة الإجتماعية:
+                                        @if($data['personal_data']->social_status == 1) متزوج @else أعزب @endif
+                                    </h6>
+                                </div>
+                            </div>
+                        @endif
+                        @if($data['personal_data']->address)
+                            <div
+                                class="elementor-element elementor-element-0603b1e elementor-widget elementor-widget-heading"
+                                data-id="0603b1e" data-element_type="widget" data-widget_type="heading.default">
+                                <div class="elementor-widget-container">
+                                    <h6 class="elementor-heading-title elementor-size-default">محل الإقامة: {{$data['personal_data']->address}}</h6>
+                                </div>
+                            </div>
+                        @endif
+                        @if($data['personal_data']->license)
+                            <div
+                                class="elementor-element elementor-element-eb9cb35 elementor-widget elementor-widget-heading"
+                                data-id="eb9cb35" data-element_type="widget" data-widget_type="heading.default">
+                                <div class="elementor-widget-container">
+                                    <h6 class="elementor-heading-title elementor-size-default">رخصة القايدة: @if($data['personal_data']->license == 1) متاح @else غير متاح @endif</h6>
+                                </div>
+                            </div>
+                        @endif
                     </div><!--// .contact-info -->
                 </div>
             </div><!--// .yui-gc -->
         </div><!--// hd -->
-        <div id="bd">
-            <div id="yui-main">
-                <div class="yui-b">
-                    <div class="yui-gf">
-                        <div class="yui-u">
-                            <h2>personal experience</h2>
+        <div class="elementor-widget-wrap elementor-element-populated">
+            <div
+                class="elementor-element elementor-element-50dabf7 elementor-widget elementor-widget-heading"
+                data-id="50dabf7" data-element_type="widget" data-widget_type="heading.default">
+                <div class="elementor-widget-container">
+                    <strong class="elementor-heading-title elementor-size-default">بيانات الاتصال:</strong>
+                </div>
+            </div>
+            <div
+                class="elementor-element elementor-element-49fd032 elementor-widget-divider--view-line elementor-widget elementor-widget-divider"
+                data-id="49fd032" data-element_type="widget" data-widget_type="divider.default">
+                <div class="elementor-widget-container">
+                    <div class="elementor-divider">
+                        <span class="elementor-divider-separator"></span>
+                    </div>
+                </div>
+            </div>
+            <div
+                class="elementor-element elementor-element-1900055 elementor-widget elementor-widget-text-editor"
+                data-id="1900055" data-element_type="widget" data-widget_type="text-editor.default">
+                <div class="elementor-widget-container">
+                    <ul class="elementor-icon-list-items">
+                        @if($data['personal_data']->mail)
+                            <li class="elementor-icon-list-item">
+                                <a href="http://Test@test.com/">
+                        <span class="elementor-icon-list-icon">
+    <i aria-hidden="true" class="fas fa-id-card"></i>						</span>
+                                    <span
+                                        class="elementor-icon-list-text">{{$data['personal_data']->mail}}</span>
+                                </a>
+                            </li>
+                        @endif
+                        @if($data['personal_data']->phone)
+                            <li class="elementor-icon-list-item">
+                    <span class="elementor-icon-list-icon">
+    <i aria-hidden="true" class="fas fa-phone-alt"></i>						</span>
+                                <span
+                                    class="elementor-icon-list-text">{{$data['personal_data']->phone}}</span>
+                            </li>
+                        @endif
+                        @if($data['personal_data']->web_site)
+                            <li class="elementor-icon-list-item">
+                    <span class="elementor-icon-list-icon">
+    <i aria-hidden="true" class="fab fa-weebly"></i>						</span>
+                                <span
+                                    class="elementor-icon-list-text"> {{$data['personal_data']->web_site}} </span>
+                            </li>
+                        @endif
+                    </ul>
+                </div>
+            </div>
+            @if(count($data['job_experience']) > 0)
+                <div
+                    class="elementor-element elementor-element-50dabf7 elementor-widget elementor-widget-heading"
+                    data-id="50dabf7" data-element_type="widget" data-widget_type="heading.default">
+                    <div class="elementor-widget-container">
+                        <strong class="elementor-heading-title elementor-size-default">الخبرة الوظيفية:</strong>
+                    </div>
+                </div>
+                <div
+                    class="elementor-element elementor-element-49fd032 elementor-widget-divider--view-line elementor-widget elementor-widget-divider"
+                    data-id="49fd032" data-element_type="widget" data-widget_type="divider.default">
+                    <div class="elementor-widget-container">
+                        <div class="elementor-divider">
+                            <span class="elementor-divider-separator"></span>
                         </div>
-                        <div class="yui-u">
-                            @foreach($data['personal_experience'] as $row)
-                                <div class="talent">
-                                    <h2>{{$row->job_name}}</h2>
-                                    <p>{{$row->job_distination}}</p>
-                                </div>
-                            @endforeach
-                        </div>
-                    </div><!--// .yui-gf -->
-                    <div class="yui-gf">
-                        <div class="yui-u">
-                            <h2>hobbies</h2>
-                        </div>
-                        <div class="yui-u">
-                            <ul class="talent">
-                                @foreach($data['hobby'] as $row)
-                                <li>{{$row->name}}</li>
-                                @endforeach
+                    </div>
+                </div>
+                <div
+                    class="elementor-element elementor-element-1900055 elementor-widget elementor-widget-text-editor"
+                    data-id="1900055" data-element_type="widget" data-widget_type="text-editor.default">
+                    <div class="elementor-widget-container">
+                        @foreach($data['job_experience'] as $row)
+                            <ul>
+                                <li>{{$row->start_date}} &#8211; {{$row->end_date}} :     
+                                     <h3>{{$row->job_name}}</h3> ( {{$row->job_distination}} )
+                                </li>
                             </ul>
+                            <p>{{$row->job_description}}</p>
+                            <p><strong>                              </strong></p>
+                        @endforeach
+                    </div>
+                </div>
+            @endif
+            @if(count($data['certificat']) > 0)
+                <div
+                    class="elementor-element elementor-element-5f91984 elementor-widget elementor-widget-heading"
+                    data-id="5f91984" data-element_type="widget" data-widget_type="heading.default">
+                    <div class="elementor-widget-container">
+                        <strong class="elementor-heading-title elementor-size-default">الشهادات:</strong></div>
+                </div>
+                <div
+                    class="elementor-element elementor-element-b539f1d elementor-widget-divider--view-line elementor-widget elementor-widget-divider"
+                    data-id="b539f1d" data-element_type="widget" data-widget_type="divider.default">
+                    <div class="elementor-widget-container">
+                        <div class="elementor-divider">
+                            <span class="elementor-divider-separator"></span>
                         </div>
-                    </div><!--// .yui-gf-->
-                    <div class="yui-gf">
-                        <div class="yui-u ">
-                            <h2>job experience</h2>
-                        </div><!--// .yui-u -->
-                        <div class="yui-u">
-                            @foreach($data['job_experience'] as $row)
-                            <div class="job">
-                                <h2>{{$row->job_name}}</h2>
-                                <h3>{{$row->job_distination}}</h3>
-                                <h4>{{$row->start_date}}  -  {{$row->end_date}}</h4>
-                            </div>
+                    </div>
+                </div>
+                <div
+                    class="elementor-element elementor-element-b9814da elementor-widget elementor-widget-text-editor"
+                    data-id="b9814da" data-element_type="widget" data-widget_type="text-editor.default">
+                    <div class="elementor-widget-container">
+                        @foreach($data['certificat'] as $row)
+                            <ul>
+                                <li>{{$row->start_date}} - {{$row->end_date}} :     
+                                     <h3>{{$row->certificate_name}}</h3>
+                                </li>
+                            </ul>
+                            <p>                                                                    
+                                  {{$row->degree_specialization}} - {{$row->collage_name}} </p>
+                            <p> </p>
+                        @endforeach
+                    </div>
+                </div>
+            @endif
+            @if(count($data['personal_experience']) > 0)
+                <div
+                    class="elementor-element elementor-element-7adb9fa elementor-widget elementor-widget-heading"
+                    data-id="7adb9fa" data-element_type="widget" data-widget_type="heading.default">
+                    <div class="elementor-widget-container">
+                        <strong class="elementor-heading-title elementor-size-default">الخبرات الشخصية:</strong>
+                    </div>
+                </div>
+                <div
+                    class="elementor-element elementor-element-e19666c elementor-widget-divider--view-line elementor-widget elementor-widget-divider"
+                    data-id="e19666c" data-element_type="widget" data-widget_type="divider.default">
+                    <div class="elementor-widget-container">
+                        <div class="elementor-divider">
+                            <span class="elementor-divider-separator"></span>
+                        </div>
+                    </div>
+                </div>
+                <div
+                    class="elementor-element elementor-element-52cc8bd elementor-widget elementor-widget-text-editor"
+                    data-id="52cc8bd" data-element_type="widget" data-widget_type="text-editor.default">
+                    <div class="elementor-widget-container">
+                        @foreach($data['personal_experience'] as $row)
+                            <ul>
+                                <li>  <h3>{{$row->job_name}}</h3>
+                                </li>
+                            </ul>
+                            <p>                                   {{$row->job_distination}}</p>
+                            <p> </p>
+                        @endforeach
+                    </div>
+                </div>
+            @endif
+            @if(count($data['hobby']) > 0)
+                <div
+                    class="elementor-element elementor-element-8e5028a elementor-widget elementor-widget-heading"
+                    data-id="8e5028a" data-element_type="widget" data-widget_type="heading.default">
+                    <div class="elementor-widget-container">
+                        <strong class="elementor-heading-title elementor-size-default">الهوايات:</strong></div>
+                </div>
+                <div
+                    class="elementor-element elementor-element-759b3a0 elementor-widget-divider--view-line elementor-widget elementor-widget-divider"
+                    data-id="759b3a0" data-element_type="widget" data-widget_type="divider.default">
+                    <div class="elementor-widget-container">
+                        <div class="elementor-divider">
+                            <span class="elementor-divider-separator"></span>
+                        </div>
+                    </div>
+                </div>
+                <div
+                    class="elementor-element elementor-element-3e58171 elementor-widget elementor-widget-text-editor"
+                    data-id="3e58171" data-element_type="widget" data-widget_type="text-editor.default">
+                    <div class="elementor-widget-container">
+                        <ul>
+                            @foreach($data['hobby'] as $row)
+                                <li><h3>{{$row->name}}</h3></li>
                             @endforeach
-                        </div><!--// .yui-u -->
-                    </div><!--// .yui-gf -->
-                    <div class="yui-gf">
-                        <div class="yui-u ">
-                            <h2>certificat</h2>
-                        </div><!--// .yui-u -->
-                        <div class="yui-u">
-                            @foreach($data['certificat'] as $row)
-                                <div class="job">
-                                    <h2>{{$row->certificate_name}}</h2>
-                                    <h3>{{$row->degree_specialization}}</h3>
-                                    <h3>{{$row->collage_name}}</h3>
-                                    <h4>{{$row->start_date}}  -  {{$row->end_date}}</h4>
-                                </div>
-                            @endforeach
-                        </div><!--// .yui-u -->
-                    </div><!--// .yui-gf -->
-                    <div class="yui-gf last">
-                        <div class="yui-u ">
-                            <h2 style="font-weight: 20px;">course</h2>
-                        </div><!--// .yui-u -->
-                        <div class="yui-u">
+                        </ul>
+                    </div>
+                </div>
+            @endif
+            @if(count($data['course']) > 0)
+                <div
+                    class="elementor-element elementor-element-d138bfd elementor-widget elementor-widget-heading"
+                    data-id="d138bfd" data-element_type="widget" data-widget_type="heading.default">
+                    <div class="elementor-widget-container">
+                        <strong class="elementor-heading-title elementor-size-default">الكورسات:</strong></div>
+                </div>
+                <div
+                    class="elementor-element elementor-element-18012e6 elementor-widget-divider--view-line elementor-widget elementor-widget-divider"
+                    data-id="18012e6" data-element_type="widget" data-widget_type="divider.default">
+                    <div class="elementor-widget-container">
+                        <div class="elementor-divider">
+                            <span class="elementor-divider-separator"> </span>
+                        </div>
+                    </div>
+                </div>
+                <div
+                    class="elementor-element elementor-element-4369207 elementor-widget elementor-widget-text-editor"
+                    data-id="4369207" data-element_type="widget" data-widget_type="text-editor.default">
+                    <div class="elementor-widget-container">
+                        <ul>
                             @foreach($data['course'] as $row)
-                                <div class="job">
-                                    <h2>{{$row->course_name}}</h2>
-                                    <h3>{{$row->degree}}</h3>
-                                    <h3>{{$row->collage_name}}</h3>
-                                    <h4>{{$row->start_date}}  -  {{$row->end_date}}</h4>
-                                </div>
+                                <li><h3>{{$row->course_name}}</h3></li>
                             @endforeach
-                        </div><!--// .yui-u -->
-                    </div><!--// .yui-gf -->
-
-                </div><!--// .yui-b -->
-            </div><!--// yui-main -->
-        </div><!--// bd -->
+                        </ul>
+                    </div>
+                </div>
+            @endif
+        </div>
     </div><!-- // inner -->
 </div><!--// doc -->
-
-<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script> -->
-<!-- Include all compiled plugins (below), or include individual files as needed -->
-<script src="js/bootstrap.min.js"></script>
 </body>
 </html>
