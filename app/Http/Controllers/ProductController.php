@@ -902,10 +902,9 @@ class ProductController extends Controller
         }
 
 //        $pdf = PDF::loadView('webview.app_cv_design.default_design', ['data' => $data]);//    }else{
-//        $pdf = PDF::loadView('webview.app_cv_design.test_print', ['data' => $data,'lang'=>$request->lang]);
-        $pdf = PDF::loadView('webview.app_cv_design.first_design', ['data' => $data,'lang'=>$request->lang]);
+        $pdf = PDF::loadView('webview.app_cv_design.test_print', ['data' => $data,'lang'=>$request->lang]);
+//        $pdf = PDF::loadView('webview.app_cv_design.first_design', ['data' => $data,'lang'=>$request->lang]);
         $num = rand(00000,99999) .time();
-
         $pdf->save(public_path() .'/uploads/cvs/'.$num.'.pdf');
         $response = APIHelpers::createApiResponse(false, 200, '', '',  env('APP_URL')  .'/uploads/cvs/'.$num.'.pdf', $request->lang);
         return response()->json($response, 200);
