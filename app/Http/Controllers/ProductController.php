@@ -880,7 +880,7 @@ class ProductController extends Controller
     }
     public function CV_print(Request $request,$id)
     {
-      
+
         ini_set('max_execution_time', 300);
 
         $user = auth()->user();
@@ -1822,9 +1822,9 @@ class ProductController extends Controller
         Session::put('api_lang', $request->lang);
         $user = auth()->user();
         if($id == 0){
-            $data = cv_personal_data::with('City')->where('user_id',$user->id)->where('cv_id',null)->first();
+            $data = cv_personal_data::with('City')->with('Nationality')->where('user_id',$user->id)->where('cv_id',null)->first();
         }else{
-            $data = cv_personal_data::with('City')->where('user_id',$user->id)->where('cv_id',$id)->first();
+            $data = cv_personal_data::with('City')->with('Nationality')->where('user_id',$user->id)->where('cv_id',$id)->first();
         }
         $response = APIHelpers::createApiResponse(false, 200, '', '',  $data, $request->lang);
         return response()->json($response, 200);
