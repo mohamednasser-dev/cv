@@ -10,9 +10,9 @@ class cv extends Model
 
     public function Personal_experience()
     {
-        $pe = $this->hasOne('App\Cv_personal_experience', 'cv_id')->select('id', 'job_name', 'cv_id');
-        dd($this->hasOne('App\Cv_personal_experience', 'cv_id')->select('id', 'job_name', 'cv_id')->first());
-
+//        $pe = $this->hasOne('App\Cv_personal_experience', 'cv_id')->select('id', 'job_name', 'cv_id');
+//        dd($this->hasOne('App\Cv_personal_experience', 'cv_id')->select('id', 'job_name', 'cv_id')->first());
+//
 
         return  $this->hasOne('App\Cv_personal_experience', 'cv_id')->select('id', 'job_name', 'cv_id');
 
